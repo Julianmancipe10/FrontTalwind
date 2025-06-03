@@ -1,0 +1,135 @@
+
+.divmayor{
+
+    display: flex;
+    justify-content: center;
+    flex-direction:column;
+    height: 100%;
+    width: 100%;
+    align-items: center;
+    
+    }
+    .HeaderDiseñoRegistro{
+        
+
+        width: 100%;
+    }
+.divPrincipal {
+    width: 100%;
+    max-width: 900px;
+    height: 500px;
+    background-image: url('../../assets/images/fondo_sena_unity.jpg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 30px;
+    display: flex;
+    justify-content: space-around; /* Espaciado uniforme */
+    align-items: center;
+    
+    position: relative;
+    box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Sección de Bienvenida */
+.bienvenida {
+    max-width: 400px;
+    text-align: left;
+}
+
+.txt-Bienvenido {
+
+    font-size: 60px;
+    color: white;
+    font-weight: bold;
+}
+
+.parrafoBienvenido {
+    color: #e8f2e1;
+    font-size: 16px;
+}
+
+.btn-leer {
+    background: linear-gradient(to right,#e4e518,#25dfc4) ;
+    padding: 10px 20px;
+    border-radius: 15px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 10px;
+}
+.btn-leer:hover {
+    background: linear-gradient(to right,#25dfc4, #e4e518) ;
+}
+
+/* Sección del formulario */
+.Registro {
+    background: rgba(182, 182, 182, 0.2);
+    
+    border-radius: 15px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    height: 350px;
+}
+
+.txt-registrarse {
+    margin-top: 20px;
+    color: white;
+    font-size: 22px;
+    
+}
+
+/* Estilos de Inputs */
+.input-field {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    border-radius: 5px;
+    border: none;
+    font-size: 16px;
+    background-color: rgb(255, 255, 255, 0.2);
+    color: white;
+    outline: none;
+    width: 300px;
+    height:35px;
+}
+
+/* Botón Password */
+.btn-IniciarSesion {
+    background: linear-gradient(to right,#e4e518,#25dfc4) ;
+    height: 35px;
+    border-radius: 15px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 30px;
+}
+.btn-IniciarSesion:hover{
+    background: linear-gradient(to right,#25dfc4, #e4e518) ;
+    
+}
+
+/* Redes Sociales */
+.redes {
+    display: flex;
+    gap: 10px;
+    margin-top: 40px;
+    
+}
+
+.redes span {
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3 ease-in-outs;
+    font-size: 40px;
+}
+
+.redes span:hover {
+    transform: scale(1.2);
+}

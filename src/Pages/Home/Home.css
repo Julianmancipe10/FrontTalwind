@@ -1,0 +1,337 @@
+/* Asegurar que el contenedor principal ocupe toda la pantalla */
+body {
+  /* Eliminado overflow-x: hidden para permitir que las tarjetas salgan del contenedor */
+}
+
+.main-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin-top: 120px; /* Aumentado para dar más espacio al header fijo */
+  font-family: 'Poppins', sans-serif;
+}
+
+.home-container {
+  display: flex; /* Hace que los elementos se acomoden en una fila */
+  align-items: flex-start; /* Cambiado de center a flex-start para alinear desde arriba */
+  justify-content: center; /* Cambiado de flex-start a center para centrar horizontalmente */
+  max-width: 90%;
+  width: 100%;
+  margin: 5px auto 0; /* Mantener el margen superior */
+  padding-top: 0; /* Reducido el padding superior a 0 */
+  padding-bottom: 10px; /* Manteniendo el padding inferior */
+  padding-left: 0; /* Eliminado el padding-left para centrar correctamente */
+  padding-right: 20px; /* Manteniendo el padding derecho */
+  position: relative; /* Se agregó para manejar "Bienvenidos" y "Ingresar" */
+  gap: 0; /* Eliminado el gap para unir los contenedores */
+  margin-left: auto; /* Cambiado de 20px a auto para centrar */
+  margin-right: auto; /* Añadido margin-right: auto para centrar */
+  height: calc(100% - 30px); /* Reduciendo la altura total en 30px */
+}
+  
+.text-container { 
+  width: 35%;
+  margin-left: auto;
+  margin-right: auto; /* Mantener para centrar el contenedor */
+  text-align: left; /* Cambiado de center a left para alinear el texto a la izquierda */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Cambiado de center a flex-start para alinear a la izquierda */
+  justify-content: center; /* Mantener centrado verticalmente */
+  margin-top: 28px; /* Ajustado para bajar el texto y alinearlo con las tarjetas */
+  padding: 20px 0;
+}
+  
+.comp-card {
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Cambiado de flex-start a center */
+  justify-content: flex-start; /* Cambiado de center a flex-start para reducir espacio superior */
+  overflow: visible; /* Añadido para permitir que el contenido se desborde */
+  margin-left: auto; /* Cambiado de 0 a auto */
+  margin-right: auto; /* Añadido margin-right: auto */
+  margin-top: -5px; /* Mantener el margen superior actual */
+  padding-top: 0; /* Asegurar que no haya padding superior */
+  height: calc(100% - 30px); /* Reduciendo la altura total en 30px */
+}
+
+.top-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  margin: 15px auto 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  left: 10px;
+}
+  
+.h1Bienvenidos {
+  font-size: 4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 0 0 15px;
+  width: 85%;
+  letter-spacing: 1px;
+  color: white;
+  top: 30px;
+  margin-left: -70px;
+  font-family: 'Poppins', sans-serif !important;
+}
+  
+.divh1TextHome {
+  font-size: 1.5rem;
+  max-width: 500px;
+  margin: 0 auto; /* Mantener para centrar el contenedor */
+  text-align: left; /* Cambiado de center a left para alinear el texto a la izquierda */
+}
+  
+.divh1TextHome h1 {
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 42px;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  transition: color 0.3s ease-in-out;
+  text-align: left; /* Cambiado de center a left para alinear el texto a la izquierda */
+}
+  
+.spanTxt {
+  color: #BFFF71;
+  font-weight: bold;
+  text-align: center; /* Añadido para centrar el texto */
+}
+  
+.button-ingresar {
+  position: absolute;
+  right: 4%;
+  left: auto;
+  margin: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: fit-content;
+  transition: all 0.3s ease;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+}
+  
+.ingresar-wrapper {
+  transform: scale(1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+  
+.ingresar-text {
+  color: #ffffff;
+  font-weight: 1000;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  transition: color 0.3s ease, text-shadow 0.3s ease, -webkit-text-stroke 0.3s ease, transform 0.3s ease;
+  margin-top: -5px;
+}
+  
+.button-ingresar:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+  
+.button-ingresar:hover .ingresar-text {
+  color: #bfff71;
+}
+  
+.button-ingresar:hover img {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 2px #bfff71;
+}
+  
+.button-ingresar img {
+  width: 40px;
+  height: 40px;
+  background-color: white;
+  border-radius: 50%;
+}
+  
+.superate-text {
+  margin-top: 65px;
+  font-weight: 1000;
+  color: #ffffff;
+  font-size: 16px;
+  font-family: 'Times New Roman', serif;
+  text-align: center; /* Añadido para centrar el texto */
+  margin-left: auto; /* Añadido para centrar */
+  margin-right: auto; /* Añadido para centrar */
+}
+  
+@keyframes bookRotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(5deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+  
+@keyframes pageFlip {
+  0% {
+    transform: rotateY(0deg);
+  }
+  25% {
+    transform: rotateY(-30deg);
+  }
+  50% {
+    transform: rotateY(-60deg);
+  }
+  75% {
+    transform: rotateY(-30deg);
+  }
+  100% {
+    transform: rotateY(0deg);
+  }
+}
+  
+/* Aseguramos que los espacios sean iguales */
+.top-section > * {
+  flex: 0 0 auto; /* Evita que los elementos se estiren */
+}
+  
+.top-section::before,
+.top-section::after {
+  content: '';
+  flex: 1;
+  max-width: 40px; /* Ajusta este valor para controlar el tamaño del espacio */
+}
+  
+/* Ajustes para pantallas pequeñas */
+@media screen and (max-width: 1024px) {
+  .home-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .text-container {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .top-section {
+    flex-direction: column;
+    margin-bottom: 0;
+    justify-content: center;
+  }
+  
+  .h1Bienvenidos {
+    margin: 15px 0;
+  }
+  
+  .button-ingresar {
+    margin-left: 0;
+  }
+  
+  .superate-text {
+    margin-top: 65px;
+    font-size: 12px;
+  }
+}
+  
+.right-container {
+  width: 55%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+/* Ajuste para pantallas pequeñas */
+@media screen and (max-width: 1024px) {
+  .right-container {
+    width: 100%;
+    align-items: center;
+  }
+}
+  
+.edit-profile-icon {
+  position: absolute;
+  right: 120px; /* Ajusta según tu diseño */
+  top: 50%;
+  transform: translateY(-50%);
+  background: #fff;
+  border-radius: 50%;
+  padding: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  cursor: pointer;
+  transition: box-shadow 0.2s, background 0.2s;
+  z-index: 10;
+}
+
+.edit-profile-icon:hover {
+  box-shadow: 0 4px 16px #25dfc4;
+  background: #e4e518;
+}
+
+.edit-profile-icon svg {
+  display: block;
+}
+  
+/* Título de la sección Eventos */
+.comp-card h2 {
+  font-size: 32px;
+  text-align: center;
+  margin: 30px 0 20px;
+  font-weight: 700;
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  letter-spacing: 0.5px;
+}
+  
+.top-section a,
+.top-section a:visited,
+.top-section a:active,
+.top-section a:hover {
+  text-decoration: none !important;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+  
+.DivHeader h1,
+.h1Bienvenidos {
+  font-family: 'Poppins', sans-serif !important;
+}
+  
+.DivHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 150px;
+  background-color: #000000;
+  box-shadow: none;
+  width: 100%;
+  height: 100px;
+  padding: 0 38px 0 80px;
+  box-sizing: border-box;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 1000 !important;
+  border-bottom: 2px solid #ffffff;
+  margin-bottom: 0 !important;
+  flex-wrap: nowrap;
+}
+  

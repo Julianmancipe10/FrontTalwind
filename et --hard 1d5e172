@@ -1,0 +1,64 @@
+[33m1d5e172[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mjuli[m[33m, [m[1;31morigin/brayanDev[m[33m)[m HEAD@{0}: reset: moving to HEAD~1
+[33m944196e[m HEAD@{1}: reset: moving to HEAD~1
+[33m70ad414[m HEAD@{2}: reset: moving to HEAD~1
+[33md5ba8b7[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/development[m[33m)[m HEAD@{3}: merge origin/main: Fast-forward
+[33mee36a59[m[33m ([m[1;31morigin/juli[m[33m)[m HEAD@{4}: checkout: moving from juli to juli
+[33mee36a59[m[33m ([m[1;31morigin/juli[m[33m)[m HEAD@{5}: reset: moving to HEAD~1
+[33mc8751cd[m HEAD@{6}: merge origin/development: Merge made by the 'ort' strategy.
+[33mee36a59[m[33m ([m[1;31morigin/juli[m[33m)[m HEAD@{7}: checkout: moving from juli to juli
+[33mee36a59[m[33m ([m[1;31morigin/juli[m[33m)[m HEAD@{8}: commit: Mejoras en el diseño y funcionalidad del chatbot, incluyendo la implementación de un tema oscuro, nuevas preguntas sugeridas, y ajustes en el estilo de los componentes. Se añadió un botón para cambiar el tema y se optimizó el manejo del historial de chat.
+[33m98bcd7c[m HEAD@{9}: checkout: moving from main to juli
+[33md22da95[m[33m ([m[1;32mmain[m[33m)[m HEAD@{10}: merge juli: Merge made by the 'ort' strategy.
+[33me0f47ae[m HEAD@{11}: checkout: moving from development to main
+[33m374f693[m[33m ([m[1;32mdevelopment[m[33m)[m HEAD@{12}: merge juli: Merge made by the 'ort' strategy.
+[33mb0d69f0[m HEAD@{13}: checkout: moving from juli to development
+[33m98bcd7c[m HEAD@{14}: checkout: moving from development to juli
+[33mb0d69f0[m HEAD@{15}: checkout: moving from juli to development
+[33m98bcd7c[m HEAD@{16}: commit: manejo del chatbot
+[33m65172a8[m HEAD@{17}: checkout: moving from main to juli
+[33me0f47ae[m HEAD@{18}: commit: fix: added terser for Vite build
+[33m1175dbd[m HEAD@{19}: commit: Ajustes de dependencias de Node and Npm
+[33m42d0d0c[m HEAD@{20}: commit: solucion de conflictos en vercel
+[33m03c7a03[m HEAD@{21}: commit: fix: redirección SPA para rutas en Vercel
+[33m9e97681[m HEAD@{22}: commit: fix: redirección SPA para rutas en Vercel
+[33mea669a3[m HEAD@{23}: commit: Fix: Resolución de problemas con rollup en Vercel
+[33m5dfead8[m HEAD@{24}: commit: Fix: Resolución de problemas de build en Vercel
+[33m10ffb7a[m HEAD@{25}: commit: Fix: Configuración para compatibilidad con Vercel
+[33mb0d69f0[m HEAD@{26}: merge development: Fast-forward
+[33m65172a8[m HEAD@{27}: checkout: moving from development to main
+[33mb0d69f0[m HEAD@{28}: commit: Actualización de dependencias y configuración para Vercel
+[33m65172a8[m HEAD@{29}: reset: moving to juli
+[33m4631c7c[m HEAD@{30}: checkout: moving from main to development
+[33m65172a8[m HEAD@{31}: reset: moving to juli
+[33m8d8b45a[m HEAD@{32}: checkout: moving from juli to main
+[33m65172a8[m HEAD@{33}: commit: Últimos cambios en rama juli
+[33m5dd03da[m HEAD@{34}: checkout: moving from juli to juli
+[33m5dd03da[m HEAD@{35}: commit (amend): Resolviendo conflictos con rama development
+[33m9acfce4[m HEAD@{36}: commit (merge): Descripción del cambio
+[33ma5724b2[m HEAD@{37}: checkout: moving from juli to juli
+[33ma5724b2[m HEAD@{38}: commit: Cambios locales antes de merge
+[33m0614b07[m HEAD@{39}: checkout: moving from juli to juli
+[33m0614b07[m HEAD@{40}: checkout: moving from juli to juli
+[33m0614b07[m HEAD@{41}: pull origin development: Fast-forward
+[33m4631c7c[m HEAD@{42}: checkout: moving from juli to juli
+[33m4631c7c[m HEAD@{43}: checkout: moving from juli to juli
+[33m4631c7c[m HEAD@{44}: checkout: moving from development to juli
+[33m4631c7c[m HEAD@{45}: checkout: moving from juli to development
+[33m4631c7c[m HEAD@{46}: checkout: moving from development to juli
+[33m4631c7c[m HEAD@{47}: checkout: moving from juli to development
+[33m4631c7c[m HEAD@{48}: checkout: moving from development to juli
+[33m4631c7c[m HEAD@{49}: checkout: moving from development to development
+[33m4631c7c[m HEAD@{50}: merge juli: Fast-forward
+[33mbbec9c7[m HEAD@{51}: checkout: moving from juli to development
+[33m4631c7c[m HEAD@{52}: commit (merge): Fusionar rama 'development' en juli para sincronizar con los cambios remotos
+[33m4154c97[m HEAD@{53}: checkout: moving from development to juli
+[33mbbec9c7[m HEAD@{54}: reset: moving to HEAD
+[33mbbec9c7[m HEAD@{55}: merge juli: updating HEAD
+[33mbbec9c7[m HEAD@{56}: checkout: moving from development to development
+[33mbbec9c7[m HEAD@{57}: merge juli: updating HEAD
+[33mbbec9c7[m HEAD@{58}: checkout: moving from development to development
+[33mbbec9c7[m HEAD@{59}: checkout: moving from juli to development
+[33m4154c97[m HEAD@{60}: commit: Mis cambios agreacion login funcional actualizando con la base de datos, se cambiaron cosas en el login en la parte del front unicamente para enlazar con el backend
+[33m8d8b45a[m HEAD@{61}: checkout: moving from main to juli
+[33m8d8b45a[m HEAD@{62}: Branch: renamed refs/heads/master to refs/heads/main
+[33m8d8b45a[m HEAD@{64}: commit (initial): Creacion de repo de front

@@ -1,0 +1,561 @@
+.DivHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 150px; /* Más separación entre los elementos del header */
+  background-color: #000000; /* Agregar fondo sólido */
+  box-shadow: none;
+  width: 100%;
+  height: 100px;
+  padding: 0 38px 0 80px; /* Aumentado el padding izquierdo */
+  box-sizing: border-box; /* Asegura que el padding no aumente el ancho total */
+  position: fixed !important; /* Cambiado a fixed para mantener el header siempre visible */
+  top: 0 !important;
+  left: 0 !important;
+  z-index: 1000 !important;
+  border-bottom: 2px solid #ffffff; /* Línea blanca en la parte inferior */
+  margin-bottom: 0 !important;
+  flex-wrap: nowrap; /* Previene el wrapping en pantallas más pequeñas */
+}
+
+.LogoSena {
+  height: 40px !important;
+  margin-right: 10px;
+  order: 1;
+  margin-left: 150px; /* Añadido para mover el logo a la derecha */
+}
+
+.centro-comercio-text {
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px !important;
+  color: #ffffff;
+  font-weight: 300;
+  line-height: 1.2;
+  text-shadow: 0.2px 0.2px 0px rgb(255, 255, 255);
+  text-align: left;
+  order: 3;
+  margin-left: -140px !important; /* Cambiado de -140px a 0 */
+  margin-right: 20px;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Solo el logo y el texto juntos */
+  order: 2;
+  margin-right: 15px;
+}
+
+.iten {
+  display: flex;
+  gap: 35px; /* Menos espacio entre los links del menú */
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.iten a {
+  font-size: 18px;
+}
+
+/*  Título */
+.DivHeader h1 {
+  font-size: 65px;
+  color: #ffffff;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 1000;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  white-space: nowrap;
+  order: 0;
+  text-align: left !important;
+  width: auto !important;
+  margin-right: 20px;
+}
+
+.DivHeader h1 span {
+  color: #bfff71;
+}
+
+/*  Estilos del Nav */
+nav {
+  display: flex;
+  align-items: center;
+  order: 4;
+  padding-left: 5%!important;/* Añadido para mover los items a la derecha */
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* 📌 Estilos de los enlaces */
+nav ul li {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: 100% !important;
+  align-items: flex-start !important;
+
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  font-size: 21px;
+  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  transition: color 0.3s ease-in-out;
+  padding-bottom: 2px;
+  line-height: 1.1;
+  white-space: nowrap;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* Clase para el ítem activo */
+nav ul li a.active {
+  color: #BFFF71;
+  -webkit-text-stroke: 0.5px black;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+
+nav ul li a::after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 3px;
+  background-color: #bfff71; /* Verde neón */
+  transition: width 0.3s ease-in-out;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: translateX(0);
+}
+
+/* El ítem activo siempre muestra la línea debajo */
+nav ul li a.active::after {
+  width: 100%;
+}
+
+nav ul li a:hover::after {
+  width: 100%;
+}
+
+nav ul li a:hover {
+  color: #BFFF71;
+  -webkit-text-stroke: 0.5px black;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+.imgSenaUnity {
+  height: 70px;
+  width: auto;
+  border-radius: 50%;
+  transition: transform 0.3s ease-in-out;
+  order: 5;
+  padding-left: 5%; /* Añadido para mover el logo 10px a la derecha */
+}
+
+.imgSenaUnity:hover {
+  transform: scale(1.1);
+}
+
+/* Media Queries para diferentes tamaños de pantalla */
+
+/* Celulares pequeños (320px - 480px) */
+@media (max-width: 480px) {
+  .DivHeader {
+    display: flex !important;
+    flex-direction: column !important;
+    height: auto !important;
+    width: 100% !important;
+    padding: 8px 10px 4px 10px !important; /* Reducido el padding inferior */
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    margin: 0 !important;
+    gap: 4px !important;
+    border-bottom: 1px solid #ffffff !important; /* Cambiado a 1px y color blanco */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 1000 !important;
+  }
+  
+  .DivHeader h1 {
+    font-size: 32px !important; /* Reducido un poco el tamaño */
+    margin: 0 !important;
+    padding: 0 !important;
+    line-height: 1 !important;
+    order: 1 !important;
+  }
+  
+  .LogoSena {
+    height: 25px !important;
+    margin: 2px 0 !important; /* Reducido el margen */
+    order: 2 !important;
+  }
+  
+  .logo-container {
+    margin: 2px 0 !important; /* Reducido el margen */
+    order: 3 !important;
+  }
+  
+  .centro-comercio-text {
+    font-size: 12px !important; /* Reducido el tamaño */
+    margin: 2px 0 !important; /* Reducido el margen */
+    line-height: 1.2 !important;
+    order: 3 !important;
+  }
+  
+  .imgSenaUnity {
+    height: 35px !important; /* Reducido el tamaño */
+    margin: 2px 0 !important; /* Reducido el margen */
+    order: 4 !important;
+  }
+  
+  nav {
+    margin-top: 4px !important; /* Reducido el margen superior */
+    order: 5 !important;
+  }
+  
+  nav ul {
+    gap: 4px !important; /* Reducido el espacio entre elementos de navegación */
+  }
+  
+  nav ul li a {
+    padding: 2px 0 !important; /* Reducido el padding */
+  }
+  
+  body {
+    padding-top: 170px !important; /* Ajusta este valor para empujar solo un poco el contenido */
+  }
+}
+
+/* Versión alternativa que mantiene elementos del header pero mejor adaptados */
+@media (min-width: 481px) and (max-width: 576px) {
+  .DivHeader {
+    height: auto;
+    padding: 15px 20px;
+    flex-wrap: wrap;
+  }
+  
+  .LogoSena {
+    height: 28px;
+    order: 1;
+  }
+  
+  .logo-container {
+    order: 2;
+  }
+  
+  .centro-comercio-text {
+    font-size: 12px;
+    order: 3;
+  }
+  
+  .imgSenaUnity {
+    height: 45px;
+    order: 5;
+  }
+  
+  .DivHeader h1 {
+    font-size: 32px;
+    order: 0;
+  }
+  
+  nav {
+    order: 4;
+    margin-top: 10px;
+    width: 100%;
+  }
+  
+  nav ul {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  nav ul li {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  nav ul li a {
+    font-size: 16px;
+  }
+  
+  .iten {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+}
+
+/* Celulares medianos (hasta 576px) */
+@media (max-width: 576px) {
+  .DivHeader {
+    height: auto;
+    padding: 15px 20px;
+    flex-wrap: wrap;
+  }
+  
+  .LogoSena {
+    height: 28px;
+    order: 1;
+  }
+  
+  .logo-container {
+    order: 2;
+  }
+  
+  .centro-comercio-text {
+    font-size: 12px;
+    order: 3;
+  }
+  
+  .imgSenaUnity {
+    height: 45px;
+    order: 5;
+  }
+  
+  .DivHeader h1 {
+    font-size: 32px;
+    order: 0;
+  }
+  
+  nav {
+    order: 4;
+    margin-top: 10px;
+    width: 100%;
+  }
+  
+  nav ul {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  nav ul li {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+  
+  nav ul li a {
+    font-size: 16px;
+  }
+  
+  .iten {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+  }
+}
+
+/* Tablets modo vertical (hasta 768px) */
+@media (max-width: 768px) {
+  .DivHeader {
+    padding: 0 25px;
+    flex-wrap: wrap;
+  }
+  
+  .LogoSena {
+    order: 1;
+    height: 30px;
+  }
+  
+  .logo-container {
+    order: 2;
+  }
+  
+  .centro-comercio-text {
+    order: 3;
+  }
+  
+  .imgSenaUnity {
+    height: 55px;
+    order: 5;
+  }
+  
+  .DivHeader h1 {
+    font-size: 40px;
+    order: 0;
+  }
+  
+  nav {
+    order: 4;
+  }
+  
+  nav ul li {
+    gap: 20px;
+  }
+  
+  nav ul li a {
+    font-size: 18px;
+  }
+}
+
+/* Tablets modo horizontal (hasta 992px) */
+@media (max-width: 992px) {
+  .DivHeader {
+    height: 90px;
+  }
+  
+  .imgSenaUnity {
+    height: 60px;
+  }
+  
+  .DivHeader h1 {
+    font-size: 50px;
+  }
+}
+
+/* Laptops y computadoras pequeñas (hasta 1200px) */
+@media (max-width: 1200px) {
+  .DivHeader {
+    padding: 0 30px;
+  }
+  
+  .imgSenaUnity {
+    height: 65px;
+  }
+  
+  .DivHeader h1 {
+    font-size: 55px;
+  }
+}
+
+/* Computadoras grandes (más de 1200px) */
+@media (min-width: 1201px) {
+  .DivHeader {
+    height: 110px;
+  }
+  
+  .imgSenaUnity {
+    height: 75px;
+  }
+  
+  .DivHeader h1 {
+    font-size: 70px;
+  }
+  
+  nav ul li a {
+    font-size: 22px;
+  }
+}
+
+/* 4K o pantallas ultra grandes (1400px+) */
+@media (min-width: 1400px) {
+  .DivHeader {
+    height: 120px;
+    padding: 0 50px;
+  }
+  
+  .LogoSena {
+    height: 40px;
+  }
+  
+  .centro-comercio-text {
+    font-size: 16px;
+  }
+  
+  .imgSenaUnity {
+    height: 85px;
+  }
+  
+  .DivHeader h1 {
+    font-size: 80px;
+  }
+  
+  nav ul li a {
+    font-size: 24px;
+  }
+}
+
+/* Media query específico para 481px */
+@media (max-width: 481px) {
+  .DivHeader {
+    height: auto;
+    padding: 8px 10px 4px 10px;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px solid #ffffff;
+  }
+
+  .DivHeader h1 {
+    font-size: 32px;
+    order: 1;
+    text-align: center !important;
+    margin: 0;
+    width: 100%;
+    line-height: 1;
+  }
+
+  .LogoSena {
+    height: 25px;
+    order: 2;
+    margin: 2px 0;
+  }
+
+  .logo-container {
+    order: 3;
+    margin: 2px 0;
+    align-self: flex-start;
+  }
+
+  .centro-comercio-text {
+    font-size: 12px;
+    text-align: left;
+    order: 3;
+    margin: 2px 0;
+    line-height: 1.2;
+  }
+
+  nav {
+    order: 4;
+    width: 100%;
+    margin-top: 4px;
+    align-self: flex-start;
+  }
+
+  nav ul {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .iten {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    width: 100%;
+  }
+
+  nav ul li a {
+    font-size: 15px;
+    text-align: left;
+    width: 100%;
+    padding: 2px 0;
+  }
+
+  .imgSenaUnity {
+    height: 35px;
+    order: 5;
+    margin: 2px 0;
+    align-self: flex-start;
+  }
+}
+
+  

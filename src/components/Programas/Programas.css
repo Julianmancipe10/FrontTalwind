@@ -1,0 +1,178 @@
+.oportunidades-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    border-radius: 20px;
+    color: white;
+    position: relative;
+    width: 90%;
+    height: 850px;
+    overflow: visible;
+    margin: 40px auto;
+   
+}
+
+.oportunidades-img {
+    width: calc(100% - 4px);
+    height: calc(100% - 4px);
+    object-fit: cover;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    filter: blur(3px);
+    z-index: 1;
+}
+
+.descripcion-oportunidades {
+    position: absolute;
+    top: calc(16% + 155px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 25px;
+    font-family: 'Poppins', sans-serif;
+    font-style: italic;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px 20px;
+    border-radius: 10px;
+    z-index: 2;
+}
+
+.descripcion-oportunidades span {
+    display: inline;
+    animation: none;
+}
+
+.opciones-container {
+    position: absolute;
+    bottom: 26%;
+    left: calc(54% + 50px);
+    transform: translateX(-50%);
+    width: 70%;
+    height: 200px;
+    z-index: 2;
+    margin-bottom: -100px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 100px;
+}
+
+/* Estilo base para todas las opciones */
+.opcion-base {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 25%;
+    min-width: 120px;
+    padding: 8px;
+    border: 2px solid transparent;
+    position: relative;
+    transform-origin: center;
+    margin: 0;
+}
+
+/* Eliminamos posicionamiento específico ya que usaremos flex */
+.opcion-base:nth-child(1) {
+    /* Sin posicionamiento específico */
+}
+
+.opcion-base:nth-child(2) {
+    /* Sin posicionamiento específico */
+}
+
+.opcion-base:nth-child(3) {
+    /* Sin posicionamiento específico */
+}
+
+.opcion-base img {
+    width: 90%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.opcion-base p {
+    font-size: 21px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+    margin-top: 5px;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+}
+
+/* Estilo para el hover */
+.opcion-hover {
+    transform: scale(1.05);
+    box-shadow: 4px 8px 24px rgba(0, 0, 0, 0.25);
+    border: 2.5px solid #BFFF71;
+    cursor: pointer;
+    z-index: 3;
+}
+
+/* Ajustes para el hover en las posiciones específicas */
+.opcion-base:nth-child(1).opcion-hover {
+    transform: scale(1.05);
+}
+
+.opcion-base:nth-child(2).opcion-hover {
+    transform: scale(1.05);
+}
+
+.opcion-base:nth-child(3).opcion-hover {
+    transform: scale(1.05);
+}
+
+.texto-hover {
+    color: #BFFF71 !important;
+    background: #333;
+    padding: 4px 12px;
+    border-radius: 10px;
+}
+
+.divider {
+    width: 93%;
+    height: 3px;
+    background-color: #ffffff;
+    margin: 15px auto;
+    border: none;
+}
+
+.oportunidades-section {
+    width: 100%;
+    padding: 20px 0;
+}
+
+.divider:first-of-type {
+    margin: 15px auto 40px auto;
+}
+
+.divider:last-of-type {
+    margin: 40px auto 15px auto;
+}
+
+.titulo-oportunidades {
+    position: absolute;
+    top: calc(8% + 100px);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 69px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    text-align: center;
+    z-index: 2;
+}
+
+.active {
+    color: #BFFF71;
+    text-decoration: underline;
+} 
