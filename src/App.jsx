@@ -11,6 +11,8 @@ import Register from "./components/Register/Register";
 import AdminPanel from "./Pages/Admin/AdminPanel";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PERMISOS } from "./constants/roles";
+import CarrerasTecnologicas from "./components/CarrerasTecnologicas/CarrerasTecnologicas";
+import CrearCarrera from "./components/CrearCarrera/CrearCarrera";
 
 // ...otros imports que tengas
 
@@ -30,6 +32,8 @@ function App() {
             <Route path="/horarios" element={<Horario />} />
             <Route path="/evento/:id" element={<VerMasEvento />} />
             <Route path="/noticia/:id" element={<VerMasNoticia />} />
+            <Route path="/carreras-tecnologicas" element={<CarrerasTecnologicas />} />
+            <Route path="/crear-carrera" element={<CrearCarrera />} />
             
             {/* Rutas protegidas del panel de administración */}
             <Route 
