@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import './InstrucFuncionarios.css';
 import profesor1 from '../../assets/images/profesor1.jpg';
 import profesor2 from '../../assets/images/profesor2.jpg';
 import profesor3 from '../../assets/images/profesor3.jpg';
@@ -10,32 +9,125 @@ import profesor7 from '../../assets/images/profesor7.jpg';
 import profesor8 from '../../assets/images/profesor8.jpg';
 import profesor9 from '../../assets/images/profesor9.jpg';
 import profesor10 from '../../assets/images/profesor10.jpg';
+import InstructorModal from '../../components/InstructorModal';
 
 const InstrucFuncionarios = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [cardsToShow, setCardsToShow] = useState(3);
+  const [selectedInstructor, setSelectedInstructor] = useState(null);
   const sectionRef = useRef(null);
   const animationFrameRef = useRef(null);
   const lastUpdateTimeRef = useRef(0);
   const ANIMATION_INTERVAL = 6000;
 
   const instructores = [
-    { id: 1, imagen: profesor1, calificacion: 4.5, nombre: 'Profesor 1' },
-    { id: 2, imagen: profesor2, calificacion: 5, nombre: 'Profesor 2' },
-    { id: 3, imagen: profesor3, calificacion: 4, nombre: 'Profesor 3' },
-    { id: 4, imagen: profesor4, calificacion: 4.5, nombre: 'Profesor 4' },
-    { id: 5, imagen: profesor5, calificacion: 5, nombre: 'Profesor 5' },
-    { id: 6, imagen: profesor6, calificacion: 4, nombre: 'Profesor 6' },
-    { id: 7, imagen: profesor7, calificacion: 4.5, nombre: 'Profesor 7' },
-    { id: 8, imagen: profesor8, calificacion: 5, nombre: 'Profesor 8' },
-    { id: 9, imagen: profesor9, calificacion: 4, nombre: 'Profesor 9' },
-    { id: 10, imagen: profesor10, calificacion: 4.5, nombre: 'Profesor 10' }
+    {
+      id: 1,
+      imagen: profesor1,
+      calificacion: 4.5,
+      nombre: 'Carlos Rodríguez',
+      especialidad: 'Desarrollo Web Frontend',
+      experiencia: '8 años de experiencia en desarrollo web y 5 años como instructor',
+      cursos: ['React JS', 'JavaScript Avanzado', 'HTML5 y CSS3'],
+      email: 'carlos.rodriguez@sena.edu.co'
+    },
+    {
+      id: 2,
+      imagen: profesor2,
+      calificacion: 5,
+      nombre: 'Ana María López',
+      especialidad: 'Desarrollo Backend',
+      experiencia: '10 años en desarrollo de software y 6 años como instructora',
+      cursos: ['Node.js', 'Python', 'Bases de Datos'],
+      email: 'ana.lopez@sena.edu.co'
+    },
+    {
+      id: 3,
+      imagen: profesor3,
+      calificacion: 4,
+      nombre: 'Juan Pablo Martínez',
+      especialidad: 'Diseño UX/UI',
+      experiencia: '7 años en diseño de interfaces y 4 años como instructor',
+      cursos: ['Diseño de Interfaces', 'Figma Avanzado', 'Principios de UX'],
+      email: 'juan.martinez@sena.edu.co'
+    },
+    {
+      id: 4,
+      imagen: profesor4,
+      calificacion: 4.5,
+      nombre: 'María Fernanda Torres',
+      especialidad: 'Desarrollo Móvil',
+      experiencia: '6 años en desarrollo móvil y 3 años como instructora',
+      cursos: ['React Native', 'Flutter', 'Desarrollo iOS'],
+      email: 'maria.torres@sena.edu.co'
+    },
+    {
+      id: 5,
+      imagen: profesor5,
+      calificacion: 5,
+      nombre: 'Diego Sánchez',
+      especialidad: 'Ciberseguridad',
+      experiencia: '12 años en seguridad informática y 5 años como instructor',
+      cursos: ['Ethical Hacking', 'Seguridad en Redes', 'Criptografía'],
+      email: 'diego.sanchez@sena.edu.co'
+    },
+    {
+      id: 6,
+      imagen: profesor6,
+      calificacion: 4,
+      nombre: 'Laura Gómez',
+      especialidad: 'Ciencia de Datos',
+      experiencia: '9 años en análisis de datos y 4 años como instructora',
+      cursos: ['Machine Learning', 'Python para Data Science', 'Big Data'],
+      email: 'laura.gomez@sena.edu.co'
+    },
+    {
+      id: 7,
+      imagen: profesor7,
+      calificacion: 4.5,
+      nombre: 'Andrés Ramírez',
+      especialidad: 'DevOps',
+      experiencia: '8 años en DevOps y 4 años como instructor',
+      cursos: ['Docker', 'Kubernetes', 'CI/CD'],
+      email: 'andres.ramirez@sena.edu.co'
+    },
+    {
+      id: 8,
+      imagen: profesor8,
+      calificacion: 5,
+      nombre: 'Carolina Herrera',
+      especialidad: 'Gestión de Proyectos',
+      experiencia: '10 años en gestión de proyectos y 6 años como instructora',
+      cursos: ['Metodologías Ágiles', 'Scrum', 'Gestión de Equipos'],
+      email: 'carolina.herrera@sena.edu.co'
+    },
+    {
+      id: 9,
+      imagen: profesor9,
+      calificacion: 4,
+      nombre: 'Roberto Mendoza',
+      especialidad: 'Inteligencia Artificial',
+      experiencia: '7 años en IA y 3 años como instructor',
+      cursos: ['Deep Learning', 'Redes Neuronales', 'Procesamiento de Lenguaje Natural'],
+      email: 'roberto.mendoza@sena.edu.co'
+    },
+    {
+      id: 10,
+      imagen: profesor10,
+      calificacion: 4.5,
+      nombre: 'Patricia Valencia',
+      especialidad: 'Cloud Computing',
+      experiencia: '9 años en cloud y 5 años como instructora',
+      cursos: ['AWS', 'Azure', 'Google Cloud'],
+      email: 'patricia.valencia@sena.edu.co'
+    }
   ];
 
   const handleResize = useCallback(() => {
-    if (window.innerWidth <= 768) {
+    const width = window.innerWidth;
+    if (width < 640) {
       setCardsToShow(1);
-    } else if (window.innerWidth <= 992) {
+    } else if (width < 1024) {
       setCardsToShow(2);
     } else {
       setCardsToShow(3);
@@ -70,40 +162,104 @@ const InstrucFuncionarios = () => {
 
   const renderEstrellas = useCallback((calificacion) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <span key={i} className={`estrella ${i < calificacion ? 'activa' : ''}`}>
+      <span 
+        key={i} 
+        className={`text-base md:text-lg transition-colors duration-300 ${
+          i < calificacion ? 'text-yellow-400' : 'text-gray-400'
+        }`}
+      >
         ★
       </span>
     ));
   }, []);
 
   return (
-    <section className="instruc-funcionarios" ref={sectionRef}>
-      <h2 className="titulo-principal">Nuestros Instructores y Funcionarios</h2>
-      
-      <div className="contenedor-principal">
-        <div className="tarjetas-slider" style={{ willChange: 'transform' }}>
-          {instructores.slice(currentIndex, currentIndex + cardsToShow).map((instructor) => (
-            <div key={instructor.id} className="tarjeta" style={{ willChange: 'transform' }}>
-              <div className="imagen-container">
-                <img 
-                  src={instructor.imagen} 
-                  alt={instructor.nombre}
-                  className="instructor-imagen"
-                />
-                <button className="ver-mas">Ver mas</button>
+    <section 
+      ref={sectionRef}
+      className="min-h-screen bg-[#1a1f2e] font-poppins overflow-hidden"
+    >
+      <div className="max-w-7xl mx-auto px-4 py-6 md:py-12">
+        <h2 className="text-2xl md:text-4xl font-bold text-white text-center mb-8">
+          Nuestros Instructores
+        </h2>
+        
+        <div className="relative">
+          <div className="flex flex-nowrap gap-4 md:gap-6 transition-transform duration-500 ease-in-out">
+            {instructores.slice(currentIndex, currentIndex + cardsToShow).map((instructor) => (
+              <div 
+                key={instructor.id} 
+                className={`flex-none ${
+                  cardsToShow === 1 ? 'w-[85%] mx-auto' : 
+                  cardsToShow === 2 ? 'w-[calc(50%-12px)]' : 
+                  'w-[calc(33.333%-16px)]'
+                }`}
+              >
+                <div className="bg-[#242937] rounded-2xl overflow-hidden shadow-lg transform hover:scale-105 transition-transform duration-300">
+                  <div className="relative aspect-[3/4] overflow-hidden">
+                    <img 
+                      src={instructor.imagen} 
+                      alt={instructor.nombre}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  
+                  <div className="p-4">
+                    <h3 className="text-lg md:text-xl font-semibold text-white text-center mb-2">
+                      {instructor.nombre}
+                    </h3>
+                    <p className="text-gray-400 text-sm text-center mb-2">
+                      {instructor.especialidad}
+                    </p>
+                    <div className="flex justify-center gap-1 mb-3">
+                      {renderEstrellas(instructor.calificacion)}
+                    </div>
+                    <button 
+                      className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition-colors duration-300 text-sm md:text-base"
+                      onClick={() => setSelectedInstructor(instructor)}
+                    >
+                      Ver más
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="calificacion">
-                {renderEstrellas(instructor.calificacion)}
-              </div>
-              <h3 className="nombre-instructor">{instructor.nombre}</h3>
-            </div>
-          ))}
-          <div className="tarjeta tarjeta-califica">
-            <h3>Califica Tus Instructores</h3>
-            <button className="ver-mas">Ver mas</button>
+            ))}
+          </div>
+
+          <div className="flex justify-center mt-6 gap-1.5">
+            {Array.from({ length: Math.ceil(instructores.length / cardsToShow) }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentIndex(i * cardsToShow)}
+                className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                  i === Math.floor(currentIndex / cardsToShow)
+                    ? 'bg-green-500 w-4'
+                    : 'bg-gray-500 hover:bg-gray-400'
+                }`}
+                aria-label={`Ir a slide ${i + 1}`}
+              />
+            ))}
           </div>
         </div>
+
+        <div className="mt-8 bg-[#242937] rounded-2xl p-6 text-center">
+          <h3 className="text-xl md:text-2xl font-bold text-white mb-3">
+            Califica Tus Instructores
+          </h3>
+          <p className="text-gray-400 text-sm md:text-base mb-4">
+            Tu opinión nos ayuda a mejorar la calidad de nuestra enseñanza
+          </p>
+          <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-colors duration-300">
+            Calificar
+          </button>
+        </div>
       </div>
+
+      {selectedInstructor && (
+        <InstructorModal
+          instructor={selectedInstructor}
+          onClose={() => setSelectedInstructor(null)}
+        />
+      )}
     </section>
   );
 };

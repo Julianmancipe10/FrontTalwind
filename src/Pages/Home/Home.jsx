@@ -6,7 +6,6 @@ import Programas from "../../components/Programas/Programas";
 import InstrucFuncionarios from "../../Layouts/InstrucFuncionarios/InstrucFuncionarios";
 import NuestrasSedes from "../../Layouts/NuestrasSedes/NuestrasSedes";
 import imgUsuario from '../../assets/images/imgUsuario.png';
-import "../Home/Home.css";
 import { Link, useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../../services/auth';
 import BotIcon from "../../components/BotIcon";
@@ -35,62 +34,49 @@ const Home = () => {
   };
 
   return (
-    <div className="main-container">
+    <div className="min-h-screen w-full flex flex-col font-poppins bg-black text-white pt-32">
       <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       <Header />
       
-      <div className="top-section">
-        <h1 className="h1Bienvenidos">{getWelcomeMessage()}</h1>
-        {user ? (
-          <>
-            <button className="button-ingresar" onClick={handleLogout}>
-              <div className="ingresar-wrapper">
-                <img src={imgUsuario} alt="Usuario" style={{cursor:'pointer'}} />
-                <span className="ingresar-text">Cerrar Sesión</span>
-              </div>
-            </button>
-            <Link to="/profile" className="edit-profile-icon" title="Editar perfil">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="8" r="4" stroke="#25dfc4" strokeWidth="2"/>
-                <path d="M4 20c0-2.21 3.58-4 8-4s8 1.79 8 4" stroke="#25dfc4" strokeWidth="2"/>
-                <path d="M17.5 17.5l2 2M19.5 17.5l-2 2" stroke="#e4e518" strokeWidth="2"/>
-              </svg>
-            </Link>
-          </>
-        ) : (
-          <Link to="/LoginPage">
-            <button className="button-ingresar">
-              <div className="ingresar-wrapper">
-                <img src={imgUsuario} alt="Usuario" style={{cursor:'pointer'}} />
-                <span className="ingresar-text">Ingresar</span>
-              </div>
-            </button>
-          </Link>
-        )}
+      {/* Top Section */}
+      <div className="w-11/12 mx-auto flex items-center justify-between relative px-4 mb-8">
+        <h1 className="text-5xl font-extrabold uppercase tracking-wide">
+          {getWelcomeMessage()}
+        </h1>
       </div>
-      
-      <div className="home-container">
-        <div className="text-container">
-          <div className='divh1TextHome'>
+
+      {/* Main Content */}
+      <div className="w-11/12 mx-auto flex flex-col lg:flex-row gap-8 px-4">
+        {/* Text Section */}
+        <div className="lg:w-2/5 space-y-6">
+          <div className="text-3xl md:text-4xl font-bold leading-tight">
             <h1>
-              No te pierdas los <span className="spanTxt">Eventos</span> y
-              <span className='spanTxt'> Novedades</span> de tu <span className="spanTxt">SENA</span> más cercano, Infórmate, participa y aprovecha todas las oportunidades.
-              Descubre <span className='spanTxt'> Talleres </span>, <span className='spanTxt'>Cursos</span> y mucho más para potenciar tu crecimiento personal y profesional.
+              No te pierdas los <span className="text-[#BFFF71]">Eventos</span> y
+              <span className="text-[#BFFF71]"> Novedades</span> de tu <span className="text-[#BFFF71]">SENA</span> más cercano, Infórmate, participa y aprovecha todas las oportunidades.
+              Descubre <span className="text-[#BFFF71]">Talleres</span>, <span className="text-[#BFFF71]">Cursos</span> y mucho más para potenciar tu crecimiento personal y profesional.
             </h1>
           </div>
         </div>
-        
-        <div className="comp-card">
+
+        {/* Cards Section */}
+        <div className="lg:w-3/5 space-y-8">
           <Eventos />
           <Noticias />
         </div>
       </div>
-      
-      <Programas />
-      <InstrucFuncionarios />
-      <NuestrasSedes />
-      <BotIcon onClick={() => setIsChatOpen(true)} />
-      <ChatModal isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+
+      {/* Additional Sections */}
+      <div className="w-full space-y-12 mt-12">
+        <Programas />
+        <InstrucFuncionarios />
+        <NuestrasSedes />
+      </div>
+
+      {/* Chat Components */}
+      <div className="fixed bottom-4 right-4 z-50">
+        <BotIcon onClick={() => setIsChatOpen(true)} />
+        <ChatModal isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      </div>
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { preguntarFAQ } from "../services/faqService";
-import "./FAQChat.css";
 
 const MAX_CHARS = 500;
 const STORAGE_KEY = 'chat_history';
@@ -43,7 +42,11 @@ const FAQChat = () => {
   // Efecto para manejar el tema
   useEffect(() => {
     try {
-      document.documentElement.setAttribute('data-theme', isDarkMode ? 'dark' : 'light');
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
       localStorage.setItem(THEME_KEY, JSON.stringify(isDarkMode));
     } catch (error) {
       console.error('Error setting theme:', error);
@@ -52,7 +55,7 @@ const FAQChat = () => {
 
   const toggleTheme = (e) => {
     e.preventDefault();
-    setIsDarkMode(prev => !prev);
+    setIsDarkMode(prevMode => !prevMode);
   };
 
   const scrollToBottom = () => {
@@ -141,60 +144,59 @@ const FAQChat = () => {
   };
 
   return (
-    <div className="faq-chat-container">
-      <div className="chat-header">
-        <h3>
-          <img 
-            src="/bot-avatar.png" 
-            alt="Bot Avatar" 
-            className="bot-avatar"
-            onError={(e) => e.target.style.display = 'none'}
-          />
-          Asistente SenaUnity
-        </h3>
-        <div className="header-controls">
-          <button 
-            type="button"
-            onClick={toggleTheme} 
-            className="theme-toggle-btn" 
-            aria-label="Cambiar tema"
-          >
-            {isDarkMode ? '☀️' : '🌙'}
-          </button>
-          {chatHistory.length > 0 && (
+    <div className="flex flex-col h-screen max-h-[600px] bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden">
+      <div className="sticky top-0 z-10 px-4 py-3 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center justify-between">
+          <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-800 dark:text-white">
+            <img 
+              src="/bot-avatar.png" 
+              alt="Bot Avatar" 
+              className="w-8 h-8 rounded-full"
+              onError={(e) => e.target.style.display = 'none'}
+            />
+            Asistente SenaUnity
+          </h3>
+          <div className="flex items-center gap-3">
             <button 
-              type="button"
-              onClick={clearChat} 
-              className="clear-chat-btn"
+              onClick={toggleTheme}
+              className="p-2 text-lg rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Cambiar tema"
             >
-              Limpiar Chat
+              {isDarkMode ? '☀️' : '🌙'}
             </button>
-          )}
+            {chatHistory.length > 0 && (
+              <button 
+                onClick={clearChat}
+                className="px-3 py-1.5 text-sm text-gray-600 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                Limpiar Chat
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="connection-status">
-        {!isConnected && (
-          <div className="offline-warning">
-            Sin conexión - El chat no está disponible
-          </div>
-        )}
-      </div>
+      {!isConnected && (
+        <div className="bg-red-500 text-white text-sm py-2 px-4 text-center">
+          Sin conexión - El chat no está disponible
+        </div>
+      )}
 
-      <div className="chat-history">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {chatHistory.length === 0 ? (
-          <div className="empty-chat">
-            <span className="empty-chat-icon">👋</span>
-            <p>¡Hola! ¿En qué puedo ayudarte hoy?</p>
+          <div className="flex flex-col items-center justify-center h-full text-center p-4">
+            <span className="text-4xl mb-4">👋</span>
+            <p className="text-lg text-gray-700 dark:text-gray-300 mb-6">
+              ¡Hola! ¿En qué puedo ayudarte hoy?
+            </p>
             {showSuggestions && (
-              <div className="suggested-questions">
+              <div className="w-full max-w-md space-y-3">
                 {SUGGESTED_QUESTIONS.map((suggestedQuestion, index) => (
                   <button
                     key={index}
-                    type="button"
-                    className="suggested-question-btn"
                     onClick={() => handleSuggestedQuestion(suggestedQuestion)}
                     disabled={isLoading}
+                    className="w-full px-4 py-3 text-left text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {suggestedQuestion}
                   </button>
@@ -205,53 +207,62 @@ const FAQChat = () => {
         ) : (
           <>
             {chatHistory.map((message, index) => (
-              <div key={index} className={`message ${message.type}`}>
-                <div className="message-content">
-                  {message.type === 'question' ? 'Tú: ' : 'Asistente: '}
-                  {message.content}
-                </div>
-                <div className="message-timestamp">
-                  {new Date(message.timestamp).toLocaleTimeString()}
+              <div 
+                key={index} 
+                className={`flex flex-col ${message.type === 'question' ? 'items-end' : 'items-start'}`}
+              >
+                <div className={`max-w-[85%] px-4 py-2 rounded-lg ${
+                  message.type === 'question'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200'
+                }`}>
+                  <div className="mb-1">
+                    {message.type === 'question' ? 'Tú: ' : 'Asistente: '}
+                    {message.content}
+                  </div>
+                  <div className="text-xs opacity-70">
+                    {new Date(message.timestamp).toLocaleTimeString()}
+                  </div>
                 </div>
               </div>
             ))}
           </>
         )}
         {isLoading && (
-          <div className="loading-indicator">
-            <div className="dot"></div>
-            <div className="dot"></div>
-            <div className="dot"></div>
+          <div className="flex justify-center items-center gap-2 py-4">
+            <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce"></div>
+            <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+            <div className="w-2 h-2 bg-blue-600 rounded-full animate-bounce [animation-delay:0.4s]"></div>
           </div>
         )}
         <div ref={chatEndRef} />
       </div>
 
       {error && (
-        <div className="error-message">
+        <div className="px-4 py-2 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 text-sm">
           {error}
         </div>
       )}
 
-      <div className="input-container">
-        <div className="textarea-wrapper">
+      <div className="sticky bottom-0 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700">
+        <div className="relative mb-4">
           <textarea
             value={question}
             onChange={handleTextareaChange}
             onKeyPress={handleKeyPress}
             placeholder="Escribe tu pregunta..."
             disabled={isLoading || !isConnected}
+            className="w-full px-4 py-2 text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none h-[60px] disabled:opacity-50"
             rows="3"
           />
-          <div className="char-counter">
+          <div className="absolute right-2 -bottom-5 text-xs text-gray-500 dark:text-gray-400">
             {remainingChars} caracteres restantes
           </div>
         </div>
         <button 
-          type="button"
           onClick={() => handleAsk()}
           disabled={isLoading || !question.trim() || !isConnected}
-          className={`send-button ${isLoading ? 'loading' : ''}`}
+          className="w-full mt-6 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {isLoading ? 'Enviando...' : 'Preguntar'}
         </button>

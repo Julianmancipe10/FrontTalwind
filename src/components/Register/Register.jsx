@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Header } from '../../Layouts/Header/Header';
 import { registerUser } from '../../services/auth';
-import './Register.css';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -44,93 +43,142 @@ const Register = () => {
   };
 
   return (
-    <div className="divmayor">
-      <div className="HeaderDiseñoRegistro">
+    <div className="min-h-screen bg-[#1a1f2e]">
+      <div className="w-full">
         <Header />
       </div>
 
-      <div className="divPrincipal">
-        {/* Sección de Bienvenida */}
-        <div className="bienvenida">
-          <h1 className="txt-Bienvenido">BIENVENIDO</h1>
-          <p className="parrafoBienvenido">
-            Únete a la mejor plataforma de información del SENA
-          </p>
-        </div>
-
-        {/* Sección del Formulario */}
-        <div className="Registro">
-          <h2 className="txt-registrarse">Registrarse</h2>
-
-          {error && <div className="error-message">{error}</div>}
-
-          <form onSubmit={handleSubmit} className="mi-formulario">
-            <input
-              type="text"
-              name="nombre"
-              placeholder="Nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-              required
-              className="input-field"
-            />
-            <input
-              type="text"
-              name="apellido"
-              placeholder="Apellido"
-              value={formData.apellido}
-              onChange={handleChange}
-              required
-              className="input-field"
-            />
-            <input
-              type="email"
-              name="correo"
-              placeholder="Correo electrónico"
-              value={formData.correo}
-              onChange={handleChange}
-              required
-              className="input-field"
-            />
-            <input
-              type="text"
-              name="documento"
-              placeholder="Número de documento"
-              value={formData.documento}
-              onChange={handleChange}
-              required
-              className="input-field"
-            />
-            <input
-              type="password"
-              name="password"
-              placeholder="Contraseña"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className="input-field"
-            />
-            <input
-              type="password"
-              name="confirmPassword"
-              placeholder="Confirmar contraseña"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              required
-              className="input-field"
-            />
-
-            <button type="submit" className="btn-Registrarse">
-              Registrarse
-            </button>
-
-            <p className="login-text">
-              ¿Ya tienes cuenta?{" "}
-              <Link to="/LoginPage" style={{ color: "blue" }}>
-                Iniciar sesión
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-6xl mx-auto bg-[#1e2536] rounded-3xl shadow-2xl overflow-hidden">
+          <div className="flex flex-col md:flex-row min-h-[600px]">
+            {/* Sección de Bienvenida */}
+            <div className="w-full md:w-1/2 p-12 flex flex-col justify-center">
+              <h1 className="text-6xl font-bold text-white mb-6">
+                BIENVENIDO
+              </h1>
+              <p className="text-lg text-gray-300 mb-8">
+                Llega al SENA, la mejor plataforma de información
+              </p>
+              <Link 
+                to="/about"
+                className="w-32 bg-gradient-to-r from-yellow-400 to-teal-400 text-black font-semibold py-2 px-6 rounded-full hover:opacity-90 transition duration-300 text-center"
+              >
+                Leer más
               </Link>
-            </p>
-          </form>
+            </div>
+
+            {/* Sección del Formulario */}
+            <div className="w-full md:w-1/2 p-12 bg-[#252b3b] rounded-l-3xl">
+              <div className="max-w-md mx-auto">
+                <h2 className="text-3xl font-bold text-center text-white mb-8">
+                  Registrarse
+                </h2>
+
+                {error && (
+                  <div className="mb-4 p-4 bg-red-900/50 border-l-4 border-red-500 text-red-200">
+                    {error}
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm text-gray-300">Nombre</label>
+                    <input
+                      type="text"
+                      name="nombre"
+                      placeholder="Ingresa tu nombre"
+                      value={formData.nombre}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg bg-[#1e2536] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm text-gray-300">Apellido</label>
+                    <input
+                      type="text"
+                      name="apellido"
+                      placeholder="Ingresa tu apellido"
+                      value={formData.apellido}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg bg-[#1e2536] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm text-gray-300">Correo electrónico</label>
+                    <input
+                      type="email"
+                      name="correo"
+                      placeholder="ejemplo@email.com"
+                      value={formData.correo}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg bg-[#1e2536] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm text-gray-300">Documento de identidad</label>
+                    <input
+                      type="text"
+                      name="documento"
+                      placeholder="Ingresa tu número de documento"
+                      value={formData.documento}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg bg-[#1e2536] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm text-gray-300">Contraseña</label>
+                    <input
+                      type="password"
+                      name="password"
+                      placeholder="Ingresa una contraseña segura"
+                      value={formData.password}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg bg-[#1e2536] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm text-gray-300">Confirmar contraseña</label>
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      placeholder="Confirma tu contraseña"
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg bg-[#1e2536] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-yellow-400 to-teal-400 text-black font-bold py-3 px-4 rounded-lg transition duration-300 hover:opacity-90 mt-6"
+                  >
+                    Registrarse
+                  </button>
+
+                  <p className="text-center text-gray-400 mt-6">
+                    ¿Ya tienes cuenta?{" "}
+                    <Link
+                      to="/LoginPage"
+                      className="text-teal-400 hover:text-teal-300 font-semibold transition duration-300"
+                    >
+                      Iniciar sesión
+                    </Link>
+                  </p>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
