@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import centro1 from '../../assets/images/centro1.jpg';
+import centro1 from '../../assets/images/optimized/optimized_centro1.jpg';
 import MapaModal from '../../components/maps/MapaModal';
 
 const NuestrasSedes = () => {

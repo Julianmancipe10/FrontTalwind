@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import imgOportunidades from "../../assets/images/fondoProgramas.png";
+import imgOportunidades from "../../assets/images/optimized/optimized_fondoProgramas.png";
 
 const Programas = () => {
   const descripcion = "Un mundo de oportunidades te espera";

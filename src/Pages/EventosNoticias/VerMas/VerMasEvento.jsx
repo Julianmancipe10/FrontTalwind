@@ -2,9 +2,9 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Header } from '../../../Layouts/Header/Header';
 import './VerMasEvento.css'; // Puedes crear este CSS para estilos propios
-import slider1 from '../../../assets/images/slider1.jpg';
-import slider2 from '../../../assets/images/slider2.jpg';
-import slider3 from '../../../assets/images/slider3.jpg';
+import slider1 from '../../../assets/images/optimized/optimized_slider1.jpg';
+import slider2 from '../../../assets/images/optimized/optimized_slider2.jpg';
+import slider3 from '../../../assets/images/optimized/optimized_slider3.jpg';
 
 // Simulación de datos de eventos
 const eventos = [

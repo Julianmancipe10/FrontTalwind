@@ -3,9 +3,9 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from 'react-router-dom';
 
 import "./Eventos.css";
-import slider1 from "../../assets/images/slider1.jpg";
-import slider2 from "../../assets/images/slider2.jpg";
-import slider3 from "../../assets/images/slider3.jpg";
+import slider1 from "../../assets/images/optimized/optimized_slider1.jpg";
+import slider2 from "../../assets/images/optimized/optimized_slider2.jpg";
+import slider3 from "../../assets/images/optimized/optimized_slider3.jpg";
 
 const cards = [
   {

@@ -1,5 +1,5 @@
 import React from "react";
-import botImage from "../assets/images/boot.png";
+import botImage from "../assets/images/optimized/optimized_boot.png";
 
 const BotIcon = ({ onClick }) => (
   <div 

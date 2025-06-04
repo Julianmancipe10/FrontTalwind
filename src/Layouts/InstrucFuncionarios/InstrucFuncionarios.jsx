@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import profesor1 from '../../assets/images/profesor1.jpg';
-import profesor2 from '../../assets/images/profesor2.jpg';
-import profesor3 from '../../assets/images/profesor3.jpg';
-import profesor4 from '../../assets/images/profesor4.jpg';
-import profesor5 from '../../assets/images/profesor5.jpg';
-import profesor6 from '../../assets/images/profesor6.jpg';
-import profesor7 from '../../assets/images/profesor7.jpg';
-import profesor8 from '../../assets/images/profesor8.jpg';
-import profesor9 from '../../assets/images/profesor9.jpg';
-import profesor10 from '../../assets/images/profesor10.jpg';
+import profesor1 from '../../assets/images/optimized/optimized_profesor1.jpg';
+import profesor2 from '../../assets/images/optimized/optimized_profesor2.jpg';
+import profesor3 from '../../assets/images/optimized/optimized_profesor3.jpg';
+import profesor4 from '../../assets/images/optimized/optimized_profesor4.jpg';
+import profesor5 from '../../assets/images/optimized/optimized_profesor5.jpg';
+import profesor6 from '../../assets/images/optimized/optimized_profesor6.jpg';
+import profesor7 from '../../assets/images/optimized/optimized_profesor7.jpg';
+import profesor8 from '../../assets/images/optimized/optimized_profesor8.jpg';
+import profesor9 from '../../assets/images/optimized/optimized_profesor9.jpg';
+import profesor10 from '../../assets/images/optimized/optimized_profesor10.jpg';
 import InstructorModal from '../../components/InstructorModal';
 
 const InstrucFuncionarios = () => {

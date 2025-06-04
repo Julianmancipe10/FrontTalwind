@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import imgLogo from '../../assets/images/Logo_SenaUnity.png'
-import imgLogoSenaGreen from '../../assets/images/Logo-Sena-Green.png'
-import imgUsuario from '../../assets/images/imgUsuario.png'
+import imgLogo from '../../assets/images/optimized/optimized_Logo_SenaUnity.png'
+import imgLogoSenaGreen from '../../assets/images/optimized/optimized_logo-sena-green.png'
+import imgUsuario from '../../assets/images/optimized/optimized_imgUsuario.png'
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { usePermissions } from '../../hooks/usePermissions';
 import { PERMISOS } from '../../constants/roles';

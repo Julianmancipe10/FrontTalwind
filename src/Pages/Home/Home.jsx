@@ -5,7 +5,7 @@ import Noticias from "../EventosNoticias/Noticias";
 import Programas from "../../components/Programas/Programas";
 import InstrucFuncionarios from "../../Layouts/InstrucFuncionarios/InstrucFuncionarios";
 import NuestrasSedes from "../../Layouts/NuestrasSedes/NuestrasSedes";
-import imgUsuario from '../../assets/images/imgUsuario.png';
+import imgUsuario from '../../assets/images/optimized/optimized_imgUsuario.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../../services/auth';
 import BotIcon from "../../components/BotIcon";

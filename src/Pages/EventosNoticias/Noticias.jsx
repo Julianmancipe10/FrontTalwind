@@ -3,9 +3,9 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from 'react-router-dom';
 
 import "./Noticias.css"; // Cambiado para usar su propio archivo CSS
-import noticia1 from "../../assets/images/slider1.jpg"; // Temporalmente usamos las mismas imágenes
-import noticia2 from "../../assets/images/slider2.jpg"; // Puedes cambiarlas por imágenes específicas de noticias
-import noticia3 from "../../assets/images/slider3.jpg";
+import noticia1 from "../../assets/images/optimized/optimized_slider1.jpg"; // Temporalmente usamos las mismas imágenes
+import noticia2 from "../../assets/images/optimized/optimized_slider2.jpg"; // Puedes cambiarlas por imágenes específicas de noticias
+import noticia3 from "../../assets/images/optimized/optimized_slider3.jpg";
 
 const cards = [
   {

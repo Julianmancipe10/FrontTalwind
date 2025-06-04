@@ -1,8 +1,8 @@
 import React from 'react';
 import { Header } from '../../Layouts/Header/Header';
-import cronogramaImg from '../../assets/images/cronograma.png';
-import rolImg from '../../assets/images/selecciona_tu_rol.png';
-import camposImg from '../../assets/images/completa_los_campos.png';
+import cronogramaImg from '../../assets/images/optimized/optimized_cronograma.png';
+import rolImg from '../../assets/images/optimized/optimized_selecciona_tu_rol.png';
+import camposImg from '../../assets/images/optimized/optimized_completa_los_campos.png';
 
 const Horario = () => {
   return (
