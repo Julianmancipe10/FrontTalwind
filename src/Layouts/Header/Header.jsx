@@ -24,8 +24,8 @@ export const Header = () => {
     navigate('/LoginPage');
   };
 
-  const activeClassName = "text-[#BFFF71] border-b-2 border-[#BFFF71]";
-  const inactiveClassName = "text-white hover:text-[#BFFF71] hover:border-b-2 hover:border-[#BFFF71] transition-all duration-300";
+  const activeClassName = "text-[#39B54A] border-b-2 border-[#39B54A]";
+  const inactiveClassName = "text-white hover:text-[#39B54A] hover:border-b-2 hover:border-[#39B54A] transition-all duration-300";
   const canAccessAdmin = hasPermission(PERMISOS.VER_USUARIO) || 
                         hasPermission(PERMISOS.VER_PERMISOS) || 
                         hasPermission(PERMISOS.VER_ROLES);
@@ -44,7 +44,7 @@ export const Header = () => {
               />
               <div>
                 <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-none">
-                  Sena<span className="text-[#BFFF71]">Unity</span>
+                  Sena<span className="text-[#39B54A]">Unity</span>
                 </h1>
                 <p className="text-[10px] sm:text-xs text-white/70">Centro de Comercio y Turismo - Quindío</p>
               </div>
@@ -126,9 +126,9 @@ export const Header = () => {
                       <img 
                         src={user.avatar_url || imgUsuario} 
                         alt="Perfil" 
-                        className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-[#BFFF71]"
+                        className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-[#39B54A]"
                       />
-                      <div className="absolute -bottom-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-[#BFFF71] rounded-full flex items-center justify-center">
+                      <div className="absolute -bottom-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-[#39B54A] rounded-full flex items-center justify-center">
                         <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-black"></div>
                       </div>
                     </div>
@@ -148,7 +148,7 @@ export const Header = () => {
               ) : (
                 <Link 
                   to="/LoginPage"
-                  className="flex items-center gap-1 sm:gap-2 bg-[#BFFF71] hover:bg-[#a8e65c] text-black font-medium py-1.5 sm:py-2 px-3 sm:px-4 rounded-full transition-all duration-300 shadow-lg shadow-[#BFFF71]/20"
+                  className="flex items-center gap-1 sm:gap-2 bg-[#39B54A] hover:bg-[#2d8f3a] text-black font-medium py-1.5 sm:py-2 px-3 sm:px-4 rounded-full transition-all duration-300 shadow-lg shadow-[#39B54A]/20"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />

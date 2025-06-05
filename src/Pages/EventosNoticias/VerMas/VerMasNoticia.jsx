@@ -1,7 +1,6 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Header } from '../../../Layouts/Header/Header';
-import './VerMasNoticia.css';
 import slider1 from '../../../assets/images/optimized/optimized_slider1.jpg';
 import slider2 from '../../../assets/images/optimized/optimized_slider2.jpg';
 import slider3 from '../../../assets/images/optimized/optimized_slider3.jpg';
@@ -41,34 +40,57 @@ const VerMasNoticia = () => {
   const { id } = useParams();
   const noticia = noticias.find(n => n.id === id);
 
-  if (!noticia) return <div>Noticia no encontrada</div>;
+  if (!noticia) return (
+    <div className="min-h-screen bg-[#1a1f2e] flex items-center justify-center">
+      <p className="text-white text-xl">Noticia no encontrada</p>
+    </div>
+  );
 
   return (
-    <div className="noticia-container">
+    <div className="min-h-screen bg-[#1a1f2e] font-['Poppins'] pb-10 pt-8">
       <Header />
-      <h2 className="noticia-section-title">Noticias</h2>
-      <div className="noticia-card">
-        <div className="noticia-info">
-          <div className="noticia-titulo">{noticia.titulo}</div>
-          <div className="noticia-fecha">{noticia.fecha}</div>
-          <div className="noticia-enlace">
-            <a href={noticia.enlace} target="_blank" rel="noopener noreferrer">Enlace</a>
+      <h2 className="text-5xl font-bold text-[#BFFF71] text-center mt-24 mb-2 uppercase">Noticias</h2>
+      
+      <div className="max-w-[90%] lg:max-w-[80%] xl:max-w-[60%] mx-auto mt-6 bg-[#1b1b1b] rounded-2xl shadow-2xl p-6 space-y-4">
+        <div className="space-y-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#BFFF71]">{noticia.titulo}</h1>
+          <p className="text-lg text-gray-400">{noticia.fecha}</p>
+          <div>
+            <a 
+              href={noticia.enlace} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-block bg-[#BFFF71] text-[#232323] px-6 py-2 rounded-lg font-medium hover:bg-[#a6e85c] transition-colors duration-200"
+            >
+              Enlace
+            </a>
           </div>
         </div>
-        <div className="noticia-content-row-wrapper">
-          <div className="noticia-content-row">
-            <div className="noticia-imagen">
-              <img src={noticia.imagen} alt={noticia.titulo} />
+
+        <div className="flex flex-col lg:flex-row gap-6 mt-4">
+          <div className="lg:w-3/5">
+            <div className="rounded-xl overflow-hidden bg-[#111111]">
+              <img 
+                src={noticia.imagen} 
+                alt={noticia.titulo}
+                className="w-full h-full object-cover"
+              />
             </div>
-            {noticia.infoAdicional !== undefined && (
-              <aside className="noticia-info-adicional">
-                <h3>Información adicional</h3>
-                <p>{noticia.infoAdicional.trim() !== '' ? noticia.infoAdicional : 'No hay información adicional por ahora'}</p>
-              </aside>
-            )}
           </div>
+
+          {noticia.infoAdicional !== undefined && (
+            <aside className="lg:w-2/5 bg-[#1b1b1b] rounded-xl p-6">
+              <h3 className="text-xl font-bold text-[#BFFF71] mb-3">
+                Información adicional
+              </h3>
+              <p className="text-white text-lg">
+                {noticia.infoAdicional.trim() !== '' ? noticia.infoAdicional : 'No hay información adicional por ahora'}
+              </p>
+            </aside>
+          )}
         </div>
-        <div className="noticia-descripcion">
+
+        <div className="text-gray-200 text-lg leading-relaxed mt-4">
           {noticia.descripcion}
         </div>
       </div>
