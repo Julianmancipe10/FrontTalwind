@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { usePermissions } from '../../hooks/usePermissions';
 import { PERMISOS } from '../../constants/roles';
 import axios from 'axios';
-import './UserManagement.css';
 
 const UserManagement = () => {
   const { hasPermission } = usePermissions();
@@ -77,101 +76,113 @@ const UserManagement = () => {
   };
 
   return (
-    <div className="user-management">
-      <div className="user-management-header">
-        <h2>Gestión de Usuarios</h2>
+    <div className="p-6 max-w-7xl mx-auto">
+      <div className="flex justify-between items-center mb-8">
+        <h2 className="text-2xl font-bold text-gray-800">Gestión de Usuarios</h2>
         {hasPermission(PERMISOS.CREAR_USUARIO) && (
           <button 
-            className="action-button"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center space-x-2"
             onClick={() => setShowCreateForm(true)}
           >
-            Crear Usuario
+            <span>Crear Usuario</span>
           </button>
         )}
       </div>
 
-      {error && <div className="error-message">{error}</div>}
-      {success && <div className="success-message">{success}</div>}
+      {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
+      {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">{success}</div>}
 
       {showCreateForm && (
-        <div className="create-user-form">
-          <h3>Crear Nuevo Usuario</h3>
-          <form onSubmit={handleCreateUser}>
-            <div className="form-group">
-              <label>Nombre:</label>
-              <input
-                type="text"
-                name="nombre"
-                value={formData.nombre}
-                onChange={handleInputChange}
-                required
-              />
+        <div className="bg-white p-6 rounded-lg shadow-lg mb-8">
+          <h3 className="text-xl font-semibold text-gray-800 mb-6">Crear Nuevo Usuario</h3>
+          <form onSubmit={handleCreateUser} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Nombre:</label>
+                <input
+                  type="text"
+                  name="nombre"
+                  value={formData.nombre}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Apellido:</label>
+                <input
+                  type="text"
+                  name="apellido"
+                  value={formData.apellido}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Correo:</label>
+                <input
+                  type="email"
+                  name="correo"
+                  value={formData.correo}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Documento:</label>
+                <input
+                  type="text"
+                  name="documento"
+                  value={formData.documento}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Contraseña:</label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Rol:</label>
+                <select
+                  name="rol"
+                  value={formData.rol}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Seleccione un rol</option>
+                  <option value="Administrador">Administrador</option>
+                  <option value="Instructor">Instructor</option>
+                  <option value="Aprendiz">Aprendiz</option>
+                  <option value="Funcionario">Funcionario</option>
+                </select>
+              </div>
             </div>
-            <div className="form-group">
-              <label>Apellido:</label>
-              <input
-                type="text"
-                name="apellido"
-                value={formData.apellido}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Correo:</label>
-              <input
-                type="email"
-                name="correo"
-                value={formData.correo}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Documento:</label>
-              <input
-                type="text"
-                name="documento"
-                value={formData.documento}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Contraseña:</label>
-              <input
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label>Rol:</label>
-              <select
-                name="rol"
-                value={formData.rol}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Seleccione un rol</option>
-                <option value="Administrador">Administrador</option>
-                <option value="Instructor">Instructor</option>
-                <option value="Aprendiz">Aprendiz</option>
-                <option value="Funcionario">Funcionario</option>
-              </select>
-            </div>
-            <div className="form-actions">
-              <button type="submit" className="action-button" disabled={loading}>
-                {loading ? 'Creando...' : 'Crear Usuario'}
-              </button>
+            <div className="flex justify-end space-x-3 mt-6">
               <button 
                 type="button" 
-                className="cancel-button"
+                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition-colors duration-200"
                 onClick={() => setShowCreateForm(false)}
               >
                 Cancelar
+              </button>
+              <button 
+                type="submit" 
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50"
+                disabled={loading}
+              >
+                {loading ? 'Creando...' : 'Crear Usuario'}
               </button>
             </div>
           </form>
@@ -179,33 +190,35 @@ const UserManagement = () => {
       )}
 
       {hasPermission(PERMISOS.VER_USUARIO) && (
-        <div className="users-list">
-          <table>
-            <thead>
+        <div className="overflow-x-auto bg-white rounded-lg shadow">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead className="bg-gray-50">
               <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Correo</th>
-                <th>Documento</th>
-                <th>Rol</th>
-                <th>Acciones</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nombre</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Apellido</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Correo</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Documento</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="bg-white divide-y divide-gray-200">
               {users.map(user => (
-                <tr key={user.idUsuario}>
-                  <td>{user.Nombre}</td>
-                  <td>{user.Apellido}</td>
-                  <td>{user.Correo}</td>
-                  <td>{user.Documento}</td>
-                  <td>{user.Rol}</td>
-                  <td>
+                <tr key={user.idUsuario} className="hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.Nombre}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.Apellido}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.Correo}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.Documento}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{user.Rol}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                     {hasPermission(PERMISOS.EDITAR_USUARIO) && (
-                      <button className="edit-button">Editar</button>
+                      <button className="text-yellow-600 hover:text-yellow-900 bg-yellow-100 px-3 py-1 rounded-md transition-colors duration-200">
+                        Editar
+                      </button>
                     )}
                     {hasPermission(PERMISOS.ELIMINAR_USUARIO) && (
                       <button 
-                        className="delete-button"
+                        className="text-red-600 hover:text-red-900 bg-red-100 px-3 py-1 rounded-md transition-colors duration-200"
                         onClick={() => handleDeleteUser(user.idUsuario)}
                       >
                         Eliminar

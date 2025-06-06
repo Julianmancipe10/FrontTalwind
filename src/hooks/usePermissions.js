@@ -8,12 +8,21 @@ export const usePermissions = () => {
   useEffect(() => {
     const loadPermissions = async () => {
       try {
-        const user = JSON.parse(localStorage.getItem('user'));
+        const userString = localStorage.getItem('user');
+        if (!userString) {
+          setUserPermissions([]);
+          return;
+        }
+        
+        const user = JSON.parse(userString);
         if (user && user.permisos) {
           setUserPermissions(user.permisos);
+        } else {
+          setUserPermissions([]);
         }
       } catch (error) {
         console.error('Error al cargar permisos:', error);
+        setUserPermissions([]);
       } finally {
         setLoading(false);
       }
