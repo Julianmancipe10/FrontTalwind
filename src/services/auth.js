@@ -84,9 +84,15 @@ export const logoutUser = () => {
 export const getCurrentUser = () => {
     try {
         const user = localStorage.getItem('user');
-        return user ? JSON.parse(user) : null;
+        if (!user || user === 'undefined' || user === 'null') {
+            return null;
+        }
+        return JSON.parse(user);
     } catch (error) {
         console.error('Error al obtener usuario actual:', error);
+        // Limpiar localStorage si hay datos corruptos
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
         return null;
     }
 };
