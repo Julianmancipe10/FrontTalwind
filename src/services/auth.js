@@ -30,7 +30,7 @@ export const loginUser = async (credentials) => {
 export const registerUser = async (userData) => {
     try {
         // Validar datos antes de enviar
-        if (!userData.nombre || !userData.apellido || !userData.correo || !userData.documento || !userData.password) {
+        if (!userData.nombre || !userData.apellido || !userData.correo || !userData.documento || !userData.password || !userData.rol) {
             throw new Error('Todos los campos son requeridos');
         }
 
@@ -51,6 +51,12 @@ export const registerUser = async (userData) => {
             throw new Error('El documento debe contener solo números');
         }
 
+        // Validar rol
+        const rolesValidos = ['aprendiz', 'instructor', 'funcionario'];
+        if (!rolesValidos.includes(userData.rol)) {
+            throw new Error('Rol no válido');
+        }
+
         const response = await fetch(`${API_URL}/auth/register`, {
             method: 'POST',
             headers: {
@@ -65,9 +71,11 @@ export const registerUser = async (userData) => {
             throw new Error(data.message || 'Error al registrar usuario');
         }
 
-        // Guardar el token en localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+        // Solo guardar token si no requiere validación (aprendices)
+        if (!data.requiresValidation && data.token) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('user', JSON.stringify(data.user));
+        }
 
         return data;
     } catch (error) {
@@ -100,4 +108,80 @@ export const getCurrentUser = () => {
 export const getAuthHeader = () => {
     const token = localStorage.getItem('token');
     return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
+// Nuevas funciones para gestión administrativa
+export const getPendingValidations = async () => {
+    try {
+        const response = await fetch(`${API_URL}/auth/admin/pending-validations`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeader(),
+            },
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Error al obtener solicitudes pendientes');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Error al obtener solicitudes pendientes:', error);
+        throw new Error(error.message || 'Error al obtener solicitudes pendientes');
+    }
+};
+
+export const approveValidation = async (solicitudId, observaciones = '') => {
+    try {
+        const response = await fetch(`${API_URL}/auth/admin/approve-validation/${solicitudId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeader(),
+            },
+            body: JSON.stringify({ observaciones }),
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Error al aprobar solicitud');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Error al aprobar solicitud:', error);
+        throw new Error(error.message || 'Error al aprobar solicitud');
+    }
+};
+
+export const rejectValidation = async (solicitudId, observaciones) => {
+    try {
+        if (!observaciones || observaciones.trim() === '') {
+            throw new Error('Las observaciones son requeridas para rechazar una solicitud');
+        }
+
+        const response = await fetch(`${API_URL}/auth/admin/reject-validation/${solicitudId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeader(),
+            },
+            body: JSON.stringify({ observaciones }),
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.message || 'Error al rechazar solicitud');
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Error al rechazar solicitud:', error);
+        throw new Error(error.message || 'Error al rechazar solicitud');
+    }
 };

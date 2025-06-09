@@ -9,13 +9,21 @@ import Profile from "./Pages/Profile/Profile";
 import Horario from "./Pages/Horarios/Horario";
 import Register from "./components/Register/Register";
 import AdminPanel from "./Pages/Admin/AdminPanel";
+import ValidationManager from "./Pages/Admin/ValidationManager";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PERMISOS } from "./constants/roles";
 import CarrerasTecnologicas from "./components/CarrerasTecnologicas/CarrerasTecnologicas";
 import CrearCarrera from "./components/CrearCarrera/CrearCarrera";
 import Footer from "./components/Footer";
 
-// ...otros imports que tengas
+// Componente para verificar si el usuario es administrador
+const AdminOnlyRoute = ({ children }) => {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  if (user.rol !== 'administrador') {
+    return <div>Acceso denegado. Solo para administradores.</div>;
+  }
+  return children;
+};
 
 function App() {
   return (
@@ -50,6 +58,16 @@ function App() {
                   >
                     <AdminPanel />
                   </ProtectedRoute>
+                } 
+              />
+
+              {/* Ruta para gestión de validaciones (solo administradores) */}
+              <Route 
+                path="/admin/validations" 
+                element={
+                  <AdminOnlyRoute>
+                    <ValidationManager />
+                  </AdminOnlyRoute>
                 } 
               />
             </Routes>

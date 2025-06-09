@@ -5,18 +5,37 @@ import imgUsuario from '../../assets/images/optimized/optimized_imgUsuario.png'
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { usePermissions } from '../../hooks/usePermissions';
 import { PERMISOS } from '../../constants/roles';
-import { getCurrentUser } from '../../services/auth';
+import { getCurrentUser, getPendingValidations } from '../../services/auth';
 
 export const Header = () => {
   const { hasPermission } = usePermissions();
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [pendingValidationsCount, setPendingValidationsCount] = useState(0);
   const navigate = useNavigate();
   
   useEffect(() => {
     const currentUser = getCurrentUser();
     setUser(currentUser);
+
+    // Si es administrador, verificar solicitudes pendientes
+    if (currentUser?.rol === 'administrador') {
+      checkPendingValidations();
+      // Verificar cada 30 segundos
+      const interval = setInterval(checkPendingValidations, 30000);
+      return () => clearInterval(interval);
+    }
   }, []);
+
+  const checkPendingValidations = async () => {
+    try {
+      const pendingRequests = await getPendingValidations();
+      setPendingValidationsCount(pendingRequests.length);
+    } catch (error) {
+      // Silenciar errores para no interferir con la UI
+      console.error('Error al verificar solicitudes pendientes:', error);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -81,21 +100,49 @@ export const Header = () => {
                   Eventos y Noticias
                 </NavLink>
                 {canAccessAdmin && (
-                  <NavLink 
-                    to="/admin" 
-                    end 
-                    className={({isActive}) => 
-                      `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
-                    }
-                  >
-                    Administración
-                  </NavLink>
+                  <div className="relative">
+                    <NavLink 
+                      to="/admin" 
+                      end 
+                      className={({isActive}) => 
+                        `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
+                      }
+                    >
+                      Administración
+                    </NavLink>
+                    {/* Indicador de solicitudes pendientes */}
+                    {user?.rol === 'administrador' && pendingValidationsCount > 0 && (
+                      <Link 
+                        to="/admin/validations"
+                        className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center animate-pulse hover:bg-red-600 transition-colors"
+                        title={`${pendingValidationsCount} solicitud(es) de validación pendiente(s)`}
+                      >
+                        {pendingValidationsCount}
+                      </Link>
+                    )}
+                  </div>
                 )}
               </ul>
             </nav>
 
             {/* User Section */}
             <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
+              {/* Botón de validaciones para administradores (móvil) */}
+              {user?.rol === 'administrador' && pendingValidationsCount > 0 && (
+                <Link 
+                  to="/admin/validations"
+                  className="md:hidden relative bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition-colors"
+                  title={`${pendingValidationsCount} solicitud(es) pendiente(s)`}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="absolute -top-1 -right-1 bg-yellow-400 text-black text-xs rounded-full h-4 w-4 flex items-center justify-center font-bold">
+                    {pendingValidationsCount}
+                  </span>
+                </Link>
+              )}
+
               {/* Botón de menú móvil */}
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -133,7 +180,11 @@ export const Header = () => {
                       </div>
                     </div>
                     <span className="hidden md:block text-sm font-medium text-white">
-                      {user.nombre}
+                      {user.nombre} {user.rol && (
+                        <span className="text-xs text-[#39B54A] capitalize">
+                          ({user.rol})
+                        </span>
+                      )}
                     </span>
                   </Link>
                   <button 
@@ -207,16 +258,28 @@ export const Header = () => {
                 Eventos y Noticias
               </NavLink>
               {canAccessAdmin && (
-                <NavLink 
-                  to="/admin" 
-                  end 
-                  className={({isActive}) => 
-                    `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
-                  }
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Administración
-                </NavLink>
+                <div className="relative">
+                  <NavLink 
+                    to="/admin" 
+                    end 
+                    className={({isActive}) => 
+                      `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
+                    }
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Administración
+                  </NavLink>
+                  {/* Acceso rápido a validaciones en móvil */}
+                  {user?.rol === 'administrador' && pendingValidationsCount > 0 && (
+                    <Link 
+                      to="/admin/validations"
+                      className="block mt-2 ml-4 text-sm text-red-400 hover:text-red-300 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      ⚠️ {pendingValidationsCount} validación(es) pendiente(s)
+                    </Link>
+                  )}
+                </div>
               )}
             </ul>
           </nav>

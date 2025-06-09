@@ -11,9 +11,11 @@ const Register = () => {
     correo: '',
     documento: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    rol: 'aprendiz'
   });
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -26,6 +28,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
 
     if (formData.password !== formData.confirmPassword) {
       setError('Las contraseñas no coinciden');
@@ -36,10 +39,34 @@ const Register = () => {
       const { confirmPassword, ...userData } = formData;
       const response = await registerUser(userData);
       
-      navigate('/profile');
+      if (response.requiresValidation) {
+        setSuccessMessage(response.message);
+        // Limpiar formulario pero no redirigir
+        setFormData({
+          nombre: '',
+          apellido: '',
+          correo: '',
+          documento: '',
+          password: '',
+          confirmPassword: '',
+          rol: 'aprendiz'
+        });
+      } else {
+        // Para aprendices, redirigir al perfil
+        navigate('/profile');
+      }
     } catch (error) {
       setError(error.message || 'Error al registrar usuario');
     }
+  };
+
+  const getRoleDescription = (rol) => {
+    const descriptions = {
+      'aprendiz': 'Acceso a horarios, eventos y noticias del SENA',
+      'instructor': 'Gestión de horarios y eventos (requiere validación administrativa)',
+      'funcionario': 'Gestión administrativa completa (requiere validación administrativa)'
+    };
+    return descriptions[rol] || '';
   };
 
   return (
@@ -50,7 +77,7 @@ const Register = () => {
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto bg-[#1e2536] rounded-3xl shadow-2xl overflow-hidden">
-          <div className="flex flex-col md:flex-row min-h-[600px]">
+          <div className="flex flex-col md:flex-row min-h-[700px]">
             {/* Sección de Bienvenida */}
             <div className="w-full md:w-1/2 p-12 flex flex-col justify-center">
               <h1 className="text-6xl font-bold text-white mb-6">
@@ -77,6 +104,12 @@ const Register = () => {
                 {error && (
                   <div className="mb-4 p-4 bg-red-900/50 border-l-4 border-red-500 text-red-200">
                     {error}
+                  </div>
+                )}
+
+                {successMessage && (
+                  <div className="mb-4 p-4 bg-green-900/50 border-l-4 border-green-500 text-green-200">
+                    {successMessage}
                   </div>
                 )}
 
@@ -131,6 +164,24 @@ const Register = () => {
                       required
                       className="w-full px-4 py-3 rounded-lg bg-[#1e2536] border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
                     />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm text-gray-300">Rol</label>
+                    <select
+                      name="rol"
+                      value={formData.rol}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 rounded-lg bg-[#1e2536] border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                    >
+                      <option value="aprendiz">Aprendiz</option>
+                      <option value="instructor">Instructor</option>
+                      <option value="funcionario">Funcionario</option>
+                    </select>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {getRoleDescription(formData.rol)}
+                    </p>
                   </div>
 
                   <div className="space-y-2">
