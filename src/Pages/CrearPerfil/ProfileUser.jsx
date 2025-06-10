@@ -86,6 +86,7 @@ const ProfileUser = () => {
     setLoading(true);
 
     try {
+      console.log('🔍 Enviando solicitud a:', 'http://localhost:5000/api/users/profile');
       const response = await fetch('http://localhost:5000/api/users/profile', {
         method: 'PUT',
         headers: {
@@ -102,6 +103,16 @@ const ProfileUser = () => {
 
       if (!response.ok) {
         const data = await response.json();
+        
+        // Si el token expiró, limpiar localStorage y redirigir al login
+        if (response.status === 403 || response.status === 401) {
+          console.log('🔑 Token expirado, limpiando localStorage...');
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          navigate('/LoginPage');
+          return;
+        }
+        
         throw new Error(data.message || 'Error al actualizar el perfil');
       }
 

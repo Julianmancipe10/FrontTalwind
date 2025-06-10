@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../../services/auth';
-import { updateUserProfile } from '../../services/profile';
+import { updateUserProfile, updateUserProfileJSON } from '../../services/profile';
 import defaultProfileImage from '../../assets/images/default-profile.svg';
 import { Header } from '../../Layouts/Header/Header';
 
@@ -81,19 +81,22 @@ const Profile = () => {
     }
 
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('nombre', formData.nombre);
-      formDataToSend.append('apellido', formData.apellido);
-      formDataToSend.append('correo', formData.correo);
-      formDataToSend.append('documento', formData.documento);
+      // Preparar datos como JSON (sin imagen por ahora)
+      const dataToSend = {
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        correo: formData.correo,
+        documento: formData.documento
+      };
+
       if (formData.password) {
-        formDataToSend.append('password', formData.password);
-      }
-      if (selectedFile) {
-        formDataToSend.append('imagen', selectedFile);
+        dataToSend.password = formData.password;
       }
 
-      const updatedUser = await updateUserProfile(formDataToSend);
+      console.log('📤 Datos a enviar:', dataToSend);
+
+      // TODO: Implementar subida de imagen separadamente
+      const updatedUser = await updateUserProfileJSON(dataToSend);
       setSuccess('Perfil actualizado exitosamente');
       setUser(updatedUser.user);
       
