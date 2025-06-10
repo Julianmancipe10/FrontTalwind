@@ -35,7 +35,6 @@ const Home = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col font-poppins bg-[#1a1f2e] text-white">
-      <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
       <Header />
       
       {/* Hero Section */}

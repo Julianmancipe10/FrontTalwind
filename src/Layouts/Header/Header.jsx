@@ -52,31 +52,33 @@ export const Header = () => {
   return ( 
     <div className="w-full">
       <header className="fixed top-0 left-0 w-full bg-black/95 backdrop-blur-sm border-b border-white/10 z-50">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo Section */}
-            <Link to="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
+          <div className="flex items-center justify-between h-16 sm:h-20">
+            {/* Logo Section - Estandarizado */}
+            <Link to="/" className="flex items-center gap-1 sm:gap-2 md:gap-3 hover:opacity-80 transition-all duration-300 min-w-0 flex-shrink-0 max-w-[55%] sm:max-w-[65%] md:max-w-none">
               <img 
-                className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 object-contain" 
+                className="h-5 w-5 xs:h-6 xs:w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 object-contain flex-shrink-0" 
                 src={imgLogoSenaGreen} 
                 alt="LogoSena" 
               />
-              <div>
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white leading-none">
+              <div className="min-w-0 flex-1 overflow-hidden">
+                <h1 className="header-title text-[10px] xs:text-xs sm:text-sm md:text-base lg:text-lg font-bold whitespace-nowrap overflow-hidden text-ellipsis">
                   Sena<span className="text-[#39B54A]">Unity</span>
                 </h1>
-                <p className="text-[10px] sm:text-xs text-white/70">Centro de Comercio y Turismo - Quindío</p>
+                <p className="header-subtitle text-[8px] xs:text-[9px] sm:text-[10px] md:text-xs lg:text-sm text-white/60 leading-none truncate">
+                  Centro de Comercio y Turismo - Quindío
+                </p>
               </div>
             </Link>
 
             {/* Navigation Section - Desktop */}
-            <nav className="hidden md:flex items-center">
+            <nav className="hidden lg:flex items-center">
               <ul className="flex items-center gap-8">
                 <NavLink 
                   to="/" 
                   end 
                   className={({isActive}) => 
-                    `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
+                    `header-nav-link ${isActive ? activeClassName : inactiveClassName}`
                   }
                 >
                   Inicio
@@ -85,7 +87,7 @@ export const Header = () => {
                   to="/horarios" 
                   end 
                   className={({isActive}) => 
-                    `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
+                    `header-nav-link ${isActive ? activeClassName : inactiveClassName}`
                   }
                 >
                   Horarios
@@ -94,7 +96,7 @@ export const Header = () => {
                   to="/eventos" 
                   end 
                   className={({isActive}) => 
-                    `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
+                    `header-nav-link ${isActive ? activeClassName : inactiveClassName}`
                   }
                 >
                   Eventos y Noticias
@@ -105,7 +107,7 @@ export const Header = () => {
                       to="/admin" 
                       end 
                       className={({isActive}) => 
-                        `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
+                        `header-nav-link ${isActive ? activeClassName : inactiveClassName}`
                       }
                     >
                       Administración
@@ -125,13 +127,13 @@ export const Header = () => {
               </ul>
             </nav>
 
-            {/* User Section */}
-            <div className="flex items-center gap-2 sm:gap-4 md:gap-6">
+            {/* User Section - Estandarizado */}
+            <div className="flex items-center gap-2 sm:gap-3 md:gap-4 flex-shrink-0">
               {/* Botón de validaciones para administradores (móvil) */}
               {user?.rol === 'administrador' && pendingValidationsCount > 0 && (
                 <Link 
                   to="/admin/validations"
-                  className="md:hidden relative bg-red-500 hover:bg-red-600 text-white p-2 rounded-full transition-colors"
+                  className="lg:hidden relative bg-red-500 hover:bg-red-600 text-white p-1.5 sm:p-2 rounded-full transition-colors flex-shrink-0"
                   title={`${pendingValidationsCount} solicitud(es) pendiente(s)`}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -146,7 +148,7 @@ export const Header = () => {
               {/* Botón de menú móvil */}
               <button 
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="md:hidden text-white p-1 sm:p-2"
+                className="lg:hidden text-white p-1.5 sm:p-2 hover:bg-white/10 rounded-lg transition-colors flex-shrink-0"
               >
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
@@ -164,24 +166,25 @@ export const Header = () => {
               </button>
               
               {user ? (
-                <div className="flex items-center gap-2 sm:gap-4">
+                <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
                   <Link 
                     to="/profile" 
-                    className="flex items-center gap-2 sm:gap-3 py-1.5 sm:py-2 px-2 sm:px-4 rounded-full bg-white/5 hover:bg-white/10 transition-all duration-300"
+                    className="flex items-center gap-2 sm:gap-3 py-1.5 sm:py-2 px-2 sm:px-3 md:px-4 rounded-full bg-white/5 hover:bg-white/10 transition-all duration-300 min-w-0"
                   >
-                    <div className="relative">
+                    <div className="relative flex-shrink-0">
                       <img 
                         src={user.avatar_url || imgUsuario} 
                         alt="Perfil" 
                         className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-[#39B54A]"
                       />
-                      <div className="absolute -bottom-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 bg-[#39B54A] rounded-full flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-black"></div>
+                      <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-3 h-3 sm:w-4 sm:h-4 bg-[#39B54A] rounded-full flex items-center justify-center">
+                        <div className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-black"></div>
                       </div>
                     </div>
-                    <span className="hidden md:block text-sm font-medium text-white">
-                      {user.nombre} {user.rol && (
-                        <span className="text-xs text-[#39B54A] capitalize">
+                    <span className="hidden md:block min-w-0">
+                      <span className="header-user-name block">{user.nombre}</span>
+                      {user.rol && (
+                        <span className="header-user-role block">
                           ({user.rol})
                         </span>
                       )}
@@ -189,9 +192,10 @@ export const Header = () => {
                   </Link>
                   <button 
                     onClick={handleLogout}
-                    className="text-white/70 hover:text-white transition-all duration-300"
+                    className="text-white/70 hover:text-white transition-all duration-300 p-1.5 sm:p-2 flex-shrink-0"
+                    title="Cerrar sesión"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                   </button>
@@ -199,12 +203,12 @@ export const Header = () => {
               ) : (
                 <Link 
                   to="/LoginPage"
-                  className="flex items-center gap-1 sm:gap-2 bg-[#39B54A] hover:bg-[#2d8f3a] text-black font-medium py-1.5 sm:py-2 px-3 sm:px-4 rounded-full transition-all duration-300 shadow-lg shadow-[#39B54A]/20"
+                  className="flex items-center gap-1.5 sm:gap-2 bg-[#39B54A] hover:bg-[#2d8f3a] text-black font-medium py-1.5 sm:py-2 px-3 sm:px-4 rounded-full transition-all duration-300 shadow-lg shadow-[#39B54A]/20 flex-shrink-0"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                   </svg>
-                  <span className="text-sm sm:text-base">Ingresar</span>
+                  <span className="text-xs sm:text-sm header-nav-link">Ingresar</span>
                 </Link>
               )}
               
@@ -214,7 +218,7 @@ export const Header = () => {
                 className="transition-transform duration-300 hover:scale-110"
               >
                 <img 
-                  className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 rounded-full object-cover" 
+                  className="h-12 w-12 rounded-full object-cover" 
                   src={imgLogo} 
                   alt="SenaUnity" 
                 />
@@ -224,14 +228,14 @@ export const Header = () => {
         </div>
 
         {/* Menú móvil */}
-        <div className={`md:hidden bg-black/95 transition-all duration-300 ${isMenuOpen ? 'max-h-screen py-4' : 'max-h-0 overflow-hidden'}`}>
+        <div className={`lg:hidden bg-black/95 transition-all duration-300 ${isMenuOpen ? 'max-h-screen py-4' : 'max-h-0 overflow-hidden'}`}>
           <nav className="px-4">
             <ul className="flex flex-col space-y-4">
               <NavLink 
                 to="/" 
                 end 
                 className={({isActive}) => 
-                  `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
+                  `header-nav-link py-2 ${isActive ? activeClassName : inactiveClassName}`
                 }
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -241,7 +245,7 @@ export const Header = () => {
                 to="/horarios" 
                 end 
                 className={({isActive}) => 
-                  `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
+                  `header-nav-link py-2 ${isActive ? activeClassName : inactiveClassName}`
                 }
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -251,7 +255,7 @@ export const Header = () => {
                 to="/eventos" 
                 end 
                 className={({isActive}) => 
-                  `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
+                  `header-nav-link py-2 ${isActive ? activeClassName : inactiveClassName}`
                 }
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -263,7 +267,7 @@ export const Header = () => {
                     to="/admin" 
                     end 
                     className={({isActive}) => 
-                      `text-base font-medium transition-all duration-300 ${isActive ? activeClassName : inactiveClassName}`
+                      `header-nav-link py-2 ${isActive ? activeClassName : inactiveClassName}`
                     }
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -273,7 +277,7 @@ export const Header = () => {
                   {user?.rol === 'administrador' && pendingValidationsCount > 0 && (
                     <Link 
                       to="/admin/validations"
-                      className="block mt-2 ml-4 text-sm text-red-400 hover:text-red-300 transition-colors"
+                      className="block mt-2 ml-4 text-sm text-red-400 hover:text-red-300 transition-colors py-1"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       ⚠️ {pendingValidationsCount} validación(es) pendiente(s)
@@ -285,7 +289,9 @@ export const Header = () => {
           </nav>
         </div>
       </header>
-      <div className="h-16 md:h-20"></div>
+      
+      {/* Spacer para evitar que el contenido se oculte detrás del header fijo */}
+      <div className="h-16 sm:h-20"></div>
     </div>
   )
 }
