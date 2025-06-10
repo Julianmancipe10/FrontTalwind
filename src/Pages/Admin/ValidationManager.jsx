@@ -171,7 +171,7 @@ const ValidationManager = () => {
         {pendingRequests.length === 0 ? (
           <div className="bg-[#1e2536] rounded-xl p-6 sm:p-8 text-center">
             <div className="text-gray-400 text-xl mb-2">
-              <i className="fas fa-check-circle text-green-400 text-2xl sm:text-3xl mb-4"></i>
+              <i className="fas fa-check-circle text-[#39B54A] text-2xl sm:text-3xl mb-4"></i>
             </div>
             <h3 className="text-white text-lg sm:text-xl font-semibold mb-2">
               No hay solicitudes pendientes
@@ -252,7 +252,7 @@ const ValidationManager = () => {
                         <button
                           onClick={() => handleApprove(request.idSolicitud)}
                           disabled={processingId === request.idSolicitud}
-                          className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-3 sm:px-4 rounded-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
+                          className="flex-1 bg-[#39B54A] hover:bg-[#2d8f37] text-white font-semibold py-2 px-3 sm:px-4 rounded-lg transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm"
                         >
                           {processingId === request.idSolicitud ? (
                             <i className="fas fa-spinner fa-spin"></i>
