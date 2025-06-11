@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Header } from '../../Layouts/Header/Header';
 import { useNavigate } from 'react-router-dom';
 import { getAuthHeader, getCurrentUser } from '../../services/auth';
+import { updateUserProfile, updateUserProfileJSON } from '../../services/profile';
 
 const ProfileUser = () => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const ProfileUser = () => {
     correo: "",
     avatar_url: null,
   });
+  const [selectedFile, setSelectedFile] = useState(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -38,7 +40,7 @@ const ProfileUser = () => {
             nombre: data.nombre || "",
             apellido: data.apellido || "",
             correo: data.correo || "",
-            avatar_url: data.avatar_url || null
+            avatar_url: data.foto ? `http://localhost:5000${data.foto}` : null
           });
         }
       } catch (error) {
@@ -67,7 +69,10 @@ const ProfileUser = () => {
         return;
       }
 
-      // Convertir la imagen a base64
+      // Guardar el archivo seleccionado
+      setSelectedFile(file);
+
+      // Mostrar preview de la imagen
       const reader = new FileReader();
       reader.onloadend = () => {
         setFormData((prevState) => ({
@@ -86,44 +91,51 @@ const ProfileUser = () => {
     setLoading(true);
 
     try {
-      console.log('🔍 Enviando solicitud a:', 'http://localhost:5000/api/users/profile');
-      const response = await fetch('http://localhost:5000/api/users/profile', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          ...getAuthHeader(),
-        },
-        body: JSON.stringify({
+      console.log('🔍 Enviando solicitud a: http://localhost:5000/api/users/profile');
+      
+      let updatedUser;
+
+      // Si hay una imagen seleccionada, usar FormData
+      if (selectedFile) {
+        const formDataToSend = new FormData();
+        formDataToSend.append('nombre', formData.nombre);
+        formDataToSend.append('apellido', formData.apellido);
+        formDataToSend.append('correo', formData.correo);
+        formDataToSend.append('profileImage', selectedFile);
+
+        console.log('📸 Enviando con imagen usando FormData');
+        updatedUser = await updateUserProfile(formDataToSend);
+      } else {
+        // Si no hay imagen, usar JSON
+        const dataToSend = {
           nombre: formData.nombre,
           apellido: formData.apellido,
           correo: formData.correo,
-          // avatar_url: formData.avatar_url // Si tu backend lo soporta
-        }),
-      });
+        };
 
-      if (!response.ok) {
-        const data = await response.json();
-        
-        // Si el token expiró, limpiar localStorage y redirigir al login
-        if (response.status === 403 || response.status === 401) {
-          console.log('🔑 Token expirado, limpiando localStorage...');
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-          navigate('/LoginPage');
-          return;
-        }
-        
-        throw new Error(data.message || 'Error al actualizar el perfil');
+        console.log('📝 Enviando solo datos JSON');
+        updatedUser = await updateUserProfileJSON(dataToSend);
       }
 
-      const data = await response.json();
-      console.log('Perfil actualizado:', data);
+      console.log('✅ Perfil actualizado:', updatedUser);
+      
       // Actualizar usuario en localStorage
       const user = JSON.parse(localStorage.getItem('user')) || {};
-      user.nombre = data.user?.nombre || formData.nombre;
-      user.apellido = data.user?.apellido || formData.apellido;
-      user.correo = data.user?.correo || formData.correo;
+      user.nombre = updatedUser.user?.nombre || formData.nombre;
+      user.apellido = updatedUser.user?.apellido || formData.apellido;
+      user.correo = updatedUser.user?.correo || formData.correo;
       localStorage.setItem('user', JSON.stringify(user));
+      
+      // Actualizar la imagen en el preview si se recibió una nueva
+      if (updatedUser.user?.foto) {
+        setFormData(prev => ({
+          ...prev,
+          avatar_url: `http://localhost:5000${updatedUser.user.foto}`
+        }));
+      }
+      
+      // Limpiar archivo seleccionado
+      setSelectedFile(null);
       setSuccess(true);
       
       // Esperar 2 segundos antes de redirigir
@@ -131,7 +143,8 @@ const ProfileUser = () => {
         navigate('/');
       }, 2000);
     } catch (error) {
-      setError(error.message);
+      setError(error.message || 'Error al actualizar el perfil');
+      console.error('❌ Error en handleSubmit:', error);
     } finally {
       setLoading(false);
     }

@@ -4,11 +4,16 @@ import { usePermissions } from '../../hooks/usePermissions';
 import { PERMISOS } from '../../constants/roles';
 import { Header } from '../../Layouts/Header/Header';
 import { getCurrentUser } from '../../services/auth';
+import CreateUserForm from './CreateUserForm';
+import UsersList from './UsersList';
 
 const AdminPanel = () => {
   const navigate = useNavigate();
   const { hasPermission } = usePermissions();
   const [activeTab, setActiveTab] = useState('users');
+  const [showCreateUserForm, setShowCreateUserForm] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const user = getCurrentUser();
   const isAdmin = user?.rol === 'administrador';
 
@@ -16,26 +21,49 @@ const AdminPanel = () => {
     navigate(-1);
   };
 
+  const handleCreateUserSuccess = (message) => {
+    setSuccessMessage(message);
+    setShowCreateUserForm(false);
+    setRefreshTrigger(prev => prev + 1);
+    
+    // Limpiar mensaje después de 5 segundos
+    setTimeout(() => {
+      setSuccessMessage('');
+    }, 5000);
+  };
+
   const renderContent = () => {
     switch (activeTab) {
       case 'users':
         return (
           <div className="space-y-4 sm:space-y-6">
-            <h2 className="text-xl sm:text-2xl font-semibold text-white">Gestión de Usuarios</h2>
-            <p className="text-gray-300 text-sm sm:text-base">
-              Administra los usuarios del sistema, crea nuevos usuarios y gestiona sus perfiles.
-            </p>
-            {hasPermission(PERMISOS.CREAR_USUARIO) && (
-              <button className="w-full sm:w-auto px-4 py-2 bg-[#39B54A] hover:bg-[#2d8f37] text-white rounded-lg transition-colors duration-200 font-medium shadow-sm text-sm sm:text-base">
-                <i className="fas fa-user-plus mr-2"></i>
-                Crear Usuario
-              </button>
-            )}
-            {hasPermission(PERMISOS.VER_USUARIO) && (
-              <div className="mt-4 sm:mt-6 bg-[#252b3b] rounded-lg p-4 sm:p-6">
-                <h3 className="text-white font-medium mb-3">Lista de Usuarios</h3>
-                <p className="text-gray-400 text-sm">Funcionalidad en desarrollo...</p>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h2 className="text-xl sm:text-2xl font-semibold text-white">Gestión de Usuarios</h2>
+                <p className="text-gray-300 text-sm sm:text-base">
+                  Administra los usuarios del sistema, crea nuevos instructores y funcionarios.
+                </p>
               </div>
+              {hasPermission(PERMISOS.CREAR_USUARIO) && (
+                <button 
+                  onClick={() => setShowCreateUserForm(true)}
+                  className="w-full sm:w-auto px-4 py-2 bg-[#39B54A] hover:bg-[#2d8f37] text-white rounded-lg transition-colors duration-200 font-medium shadow-sm text-sm sm:text-base"
+                >
+                  <i className="fas fa-user-plus mr-2"></i>
+                  Crear Usuario
+                </button>
+              )}
+            </div>
+
+            {successMessage && (
+              <div className="bg-green-900/50 border border-green-600 text-green-300 px-4 py-3 rounded-lg flex items-center">
+                <i className="fas fa-check-circle mr-2"></i>
+                {successMessage}
+              </div>
+            )}
+
+            {hasPermission(PERMISOS.VER_USUARIO) && (
+              <UsersList refreshTrigger={refreshTrigger} />
             )}
           </div>
         );
@@ -286,6 +314,14 @@ const AdminPanel = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal de crear usuario */}
+      {showCreateUserForm && (
+        <CreateUserForm
+          onSuccess={handleCreateUserSuccess}
+          onClose={() => setShowCreateUserForm(false)}
+        />
+      )}
     </div>
   );
 };
