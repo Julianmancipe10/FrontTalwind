@@ -27,6 +27,25 @@ export const Header = () => {
     }
   }, []);
 
+  // Efecto para detectar cambios en el perfil del usuario
+  useEffect(() => {
+    const handleUserUpdate = () => {
+      const updatedUser = getCurrentUser();
+      setUser(updatedUser);
+    };
+
+    // Revisar cambios cada segundo (para detectar actualizaciones del perfil)
+    const userUpdateInterval = setInterval(handleUserUpdate, 1000);
+    
+    // También escuchar eventos de storage para cambios desde otras pestañas
+    window.addEventListener('storage', handleUserUpdate);
+
+    return () => {
+      clearInterval(userUpdateInterval);
+      window.removeEventListener('storage', handleUserUpdate);
+    };
+  }, []);
+
   const checkPendingValidations = async () => {
     try {
       const pendingRequests = await getPendingValidations();
@@ -173,9 +192,13 @@ export const Header = () => {
                   >
                     <div className="relative flex-shrink-0">
                       <img 
-                        src={user.avatar_url || imgUsuario} 
+                        src={user.foto ? `http://localhost:5000${user.foto}` : imgUsuario} 
                         alt="Perfil" 
                         className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-[#39B54A]"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = imgUsuario;
+                        }}
                       />
                       <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-3 h-3 sm:w-4 sm:h-4 bg-[#39B54A] rounded-full flex items-center justify-center">
                         <div className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-black"></div>

@@ -30,16 +30,60 @@ const Profile = () => {
           navigate('/LoginPage');
           return;
         }
-        setUser(userData);
-        setFormData({
-          nombre: userData.nombre || '',
-          apellido: userData.apellido || '',
-          correo: userData.correo || '',
-          documento: userData.documento || '',
-          password: '',
-          confirmPassword: ''
-        });
-        setImagePreview(userData.foto || defaultProfileImage);
+        
+        // Cargar datos frescos del servidor
+        try {
+          const response = await fetch('http://localhost:5000/api/users/profile', {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+
+          if (response.ok) {
+            const profileData = await response.json();
+            setUser(profileData);
+            setFormData({
+              nombre: profileData.nombre || '',
+              apellido: profileData.apellido || '',
+              correo: profileData.correo || '',
+              documento: profileData.documento || '',
+              password: '',
+              confirmPassword: ''
+            });
+            
+            // Cargar imagen de perfil
+            if (profileData.foto) {
+              setImagePreview(`http://localhost:5000${profileData.foto}`);
+            } else {
+              setImagePreview(defaultProfileImage);
+            }
+          } else {
+            // Si falla cargar del servidor, usar datos de localStorage
+            setUser(userData);
+            setFormData({
+              nombre: userData.nombre || '',
+              apellido: userData.apellido || '',
+              correo: userData.correo || '',
+              documento: userData.documento || '',
+              password: '',
+              confirmPassword: ''
+            });
+            setImagePreview(defaultProfileImage);
+          }
+        } catch (serverError) {
+          console.error('Error al cargar perfil del servidor:', serverError);
+          // Fallback a localStorage si hay error de servidor
+          setUser(userData);
+          setFormData({
+            nombre: userData.nombre || '',
+            apellido: userData.apellido || '',
+            correo: userData.correo || '',
+            documento: userData.documento || '',
+            password: '',
+            confirmPassword: ''
+          });
+          setImagePreview(defaultProfileImage);
+        }
       } catch (error) {
         setError('Error al cargar los datos del usuario');
       }
@@ -58,8 +102,10 @@ const Profile = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    
     if (file) {
       setSelectedFile(file);
+      
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -81,22 +127,37 @@ const Profile = () => {
     }
 
     try {
-      // Preparar datos como JSON (sin imagen por ahora)
-      const dataToSend = {
-        nombre: formData.nombre,
-        apellido: formData.apellido,
-        correo: formData.correo,
-        documento: formData.documento
-      };
+      let updatedUser;
 
-      if (formData.password) {
-        dataToSend.password = formData.password;
+      // Si hay una imagen seleccionada, usar FormData
+      if (selectedFile) {
+        const formDataToSend = new FormData();
+        formDataToSend.append('nombre', formData.nombre);
+        formDataToSend.append('apellido', formData.apellido);
+        formDataToSend.append('correo', formData.correo);
+        formDataToSend.append('documento', formData.documento);
+        if (formData.password) {
+          formDataToSend.append('password', formData.password);
+        }
+        formDataToSend.append('profileImage', selectedFile);
+
+        updatedUser = await updateUserProfile(formDataToSend);
+      } else {
+        // Si no hay imagen, usar JSON
+        const dataToSend = {
+          nombre: formData.nombre,
+          apellido: formData.apellido,
+          correo: formData.correo,
+          documento: formData.documento
+        };
+
+        if (formData.password) {
+          dataToSend.password = formData.password;
+        }
+
+        updatedUser = await updateUserProfileJSON(dataToSend);
       }
 
-      console.log('📤 Datos a enviar:', dataToSend);
-
-      // TODO: Implementar subida de imagen separadamente
-      const updatedUser = await updateUserProfileJSON(dataToSend);
       setSuccess('Perfil actualizado exitosamente');
       setUser(updatedUser.user);
       
@@ -106,8 +167,17 @@ const Profile = () => {
         ...currentUser,
         ...updatedUser.user
       }));
+
+      // Actualizar la imagen del perfil si se recibió una nueva
+      if (updatedUser.user.foto) {
+        setImagePreview(`http://localhost:5000${updatedUser.user.foto}`);
+      }
+
+      // Limpiar la imagen seleccionada después de actualizar exitosamente
+      setSelectedFile(null);
     } catch (error) {
       setError(error.message || 'Error al actualizar el perfil');
+      console.error('❌ Error en handleSubmit:', error);
     } finally {
       setLoading(false);
     }
