@@ -6,6 +6,7 @@ import { Header } from '../../Layouts/Header/Header';
 import { getCurrentUser } from '../../services/auth';
 import CreateUserForm from './CreateUserForm';
 import UsersList from './UsersList';
+import PermissionsManager from './PermissionsManager';
 
 const AdminPanel = () => {
   const navigate = useNavigate();
@@ -71,14 +72,13 @@ const AdminPanel = () => {
       case 'permissions':
         return (
           <div className="space-y-4 sm:space-y-6">
-            <h2 className="text-xl sm:text-2xl font-semibold text-white">Gestión de Permisos</h2>
-            <p className="text-gray-300 text-sm sm:text-base">
-              Administra los permisos del sistema y asígnalos a usuarios específicos.
-            </p>
-            {hasPermission(PERMISOS.ASIGNAR_PERMISOS) && (
-              <div className="mt-4 sm:mt-6 bg-[#252b3b] rounded-lg p-4 sm:p-6">
-                <h3 className="text-white font-medium mb-3">Asignación de Permisos</h3>
-                <p className="text-gray-400 text-sm">Funcionalidad en desarrollo...</p>
+            {hasPermission(PERMISOS.ASIGNAR_PERMISOS) ? (
+              <PermissionsManager />
+            ) : (
+              <div className="bg-[#252b3b] rounded-lg p-6 text-center">
+                <div className="text-red-400 text-5xl mb-4">🔒</div>
+                <h3 className="text-white font-medium mb-3">Sin permisos suficientes</h3>
+                <p className="text-gray-400 text-sm">No tienes autorización para gestionar permisos</p>
               </div>
             )}
           </div>
@@ -309,7 +309,7 @@ const AdminPanel = () => {
           </div>
           
           {/* Content */}
-          <div className="flex-1 bg-[#1e2536] rounded-xl shadow-sm p-4 sm:p-6 border border-gray-700 min-w-0 overflow-hidden">
+          <div className="flex-1 bg-[#1e2536] rounded-xl shadow-sm p-4 sm:p-6 border border-gray-700 min-w-0">
             {renderContent()}
           </div>
         </div>
