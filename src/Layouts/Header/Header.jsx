@@ -11,6 +11,7 @@ export const Header = () => {
   const { hasPermission } = usePermissions();
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPublicacionesOpen, setIsPublicacionesOpen] = useState(false);
   const [pendingValidationsCount, setPendingValidationsCount] = useState(0);
   const navigate = useNavigate();
   
@@ -67,6 +68,9 @@ export const Header = () => {
   const canAccessAdmin = hasPermission(PERMISOS.VER_USUARIO) || 
                         hasPermission(PERMISOS.VER_PERMISOS) || 
                         hasPermission(PERMISOS.VER_ROLES);
+  const canAccessPublicaciones = hasPermission(PERMISOS.CREAR_EVENTO) || 
+                               hasPermission(PERMISOS.CREAR_NOTICIA) || 
+                               hasPermission(PERMISOS.CREAR_CARRERA);
 
   return ( 
     <div className="w-full">
@@ -111,6 +115,55 @@ export const Header = () => {
                 >
                   Horarios
                 </NavLink>
+                
+                {/* Menú desplegable de Publicaciones */}
+                {canAccessPublicaciones && (
+                  <div className="relative group">
+                    <button
+                      className={`header-nav-link ${inactiveClassName} flex items-center gap-1`}
+                      onClick={() => setIsPublicacionesOpen(!isPublicacionesOpen)}
+                    >
+                      Publicaciones
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                    
+                    {/* Menú desplegable */}
+                    <div className={`absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-gray-800 ring-1 ring-black ring-opacity-5 transition-all duration-200 ${isPublicacionesOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+                      <div className="py-1">
+                        {hasPermission(PERMISOS.CREAR_EVENTO) && (
+                          <Link
+                            to="/crear-evento"
+                            className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
+                            onClick={() => setIsPublicacionesOpen(false)}
+                          >
+                            Crear Evento
+                          </Link>
+                        )}
+                        {hasPermission(PERMISOS.CREAR_NOTICIA) && (
+                          <Link
+                            to="/crear-noticia"
+                            className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
+                            onClick={() => setIsPublicacionesOpen(false)}
+                          >
+                            Crear Noticia
+                          </Link>
+                        )}
+                        {hasPermission(PERMISOS.CREAR_CARRERA) && (
+                          <Link
+                            to="/crear-carrera"
+                            className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
+                            onClick={() => setIsPublicacionesOpen(false)}
+                          >
+                            Crear Carrera
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <NavLink 
                   to="/eventos" 
                   end 
@@ -304,6 +357,40 @@ export const Header = () => {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       ⚠️ {pendingValidationsCount} validación(es) pendiente(s)
+                    </Link>
+                  )}
+                </div>
+              )}
+
+              {/* Menú móvil de Publicaciones */}
+              {canAccessPublicaciones && (
+                <div className="space-y-2">
+                  <div className="text-white/60 text-sm px-2">Publicaciones</div>
+                  {hasPermission(PERMISOS.CREAR_EVENTO) && (
+                    <Link
+                      to="/crear-evento"
+                      className="block px-4 py-2 text-sm text-white hover:bg-gray-700 rounded-md"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Crear Evento
+                    </Link>
+                  )}
+                  {hasPermission(PERMISOS.CREAR_NOTICIA) && (
+                    <Link
+                      to="/crear-noticia"
+                      className="block px-4 py-2 text-sm text-white hover:bg-gray-700 rounded-md"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Crear Noticia
+                    </Link>
+                  )}
+                  {hasPermission(PERMISOS.CREAR_CARRERA) && (
+                    <Link
+                      to="/crear-carrera"
+                      className="block px-4 py-2 text-sm text-white hover:bg-gray-700 rounded-md"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Crear Carrera
                     </Link>
                   )}
                 </div>

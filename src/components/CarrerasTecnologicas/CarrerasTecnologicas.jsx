@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Header } from '../../Layouts/Header/Header';
+import PermissionWrapper from '../PermissionWrapper/PermissionWrapper';
+import { PERMISOS } from '../../constants/roles';
 
 const CarrerasTecnologicas = () => {
   const navigate = useNavigate();
@@ -74,12 +76,22 @@ const CarrerasTecnologicas = () => {
               Carreras Tecnológicas
             </h1>
           </div>
-          <button 
-            onClick={() => setMostrarModal(true)}
-            className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-          >
-            Agregar Carrera
-          </button>
+          <div className="flex gap-4">
+            <PermissionWrapper requiredPermissions={[PERMISOS.CREAR_CARRERA]}>
+              <button 
+                onClick={irACrearCarrera}
+                className="w-full sm:w-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Crear Nueva Carrera
+              </button>
+            </PermissionWrapper>
+            <button 
+              onClick={() => setMostrarModal(true)}
+              className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            >
+              Agregar Carrera
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -159,12 +171,14 @@ const CarrerasTecnologicas = () => {
               </ul>
 
               <div className="flex flex-col sm:flex-row gap-4 mt-6">
-                <button 
-                  onClick={irACrearCarrera}
-                  className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300"
-                >
-                  Crear Nueva Carrera
-                </button>
+                <PermissionWrapper requiredPermissions={[PERMISOS.CREAR_CARRERA]}>
+                  <button 
+                    onClick={irACrearCarrera}
+                    className="w-full sm:w-auto px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-300"
+                  >
+                    Crear Nueva Carrera
+                  </button>
+                </PermissionWrapper>
                 <button 
                   onClick={() => setMostrarModal(false)}
                   className="w-full sm:w-auto px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-300"

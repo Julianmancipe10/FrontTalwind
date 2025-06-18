@@ -3,7 +3,7 @@ import axios from 'axios';
 import { PERMISOS } from '../constants/roles';
 import { getCurrentUser } from '../services/auth';
 
-const API_URL = 'http://localhost:3000/api'; // Corregido: usar el mismo puerto que en auth.js
+const API_URL = 'http://localhost:5000/api'; // Corregido: usar el mismo puerto que en auth.js
 
 export const usePermissions = () => {
   const [userPermissions, setUserPermissions] = useState([]);
@@ -33,7 +33,7 @@ export const usePermissions = () => {
 
       // Si no hay permisos en localStorage, intentar obtenerlos del backend
       try {
-        const response = await axios.get(`${API_URL}/auth/me`, {
+        const response = await axios.get(`${API_URL}/auth/permissions`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -64,8 +64,17 @@ export const usePermissions = () => {
 
   // Función helper para obtener permisos por defecto según el rol
   const getDefaultPermissionsByRole = (rol) => {
-    const { ROLES_PERMISOS } = require('../constants/roles');
-    return ROLES_PERMISOS[rol] || [];
+    // Permisos por defecto según el rol
+    switch (rol?.toLowerCase()) {
+      case 'instructor':
+        return [PERMISOS.CREAR_EVENTO, PERMISOS.CREAR_NOTICIA, PERMISOS.CREAR_CARRERA];
+      case 'funcionario':
+        return [PERMISOS.CREAR_EVENTO, PERMISOS.CREAR_NOTICIA];
+      case 'administrador':
+        return Object.values(PERMISOS);
+      default:
+        return [];
+    }
   };
 
   useEffect(() => {

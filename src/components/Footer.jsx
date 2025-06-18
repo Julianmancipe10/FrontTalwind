@@ -41,9 +41,9 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contacto</h3>
             <ul className="space-y-2 text-gray-400">
-              <li>📍 Calle 57 No. 8-69, Bogotá D.C.</li>
-              <li>📞 (57 1) 546 1500</li>
-              <li>✉️ servicioalciudadano@sena.edu.co</li>
+              <li>📍 Cra. 18 #7-58, Armenia, Quindío</li>
+              <li>📞 </li>
+              <li>✉️ </li>
             </ul>
           </div>
         </div>

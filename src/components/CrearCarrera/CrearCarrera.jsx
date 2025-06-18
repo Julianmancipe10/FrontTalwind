@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { Header } from '../../Layouts/Header/Header';
 import { useNavigate } from 'react-router-dom';
+import { usePermissions } from '../../hooks/usePermissions';
+import { PERMISOS } from '../../constants/roles';
+import AccessDenied from '../AccessDenied/AccessDenied';
 
 const CrearCarrera = () => {
+  // TODOS los hooks deben ir PRIMERO
+  const { hasPermission } = usePermissions();
   const navigate = useNavigate();
   const [carrera, setCarrera] = useState({
     titulo: '',
@@ -14,6 +19,15 @@ const CrearCarrera = () => {
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
+
+  // Verificar permisos DESPUÉS de todos los hooks
+  if (!hasPermission(PERMISOS.CREAR_CARRERA)) {
+    return (
+      <AccessDenied 
+        message="No tienes permisos para crear carreras. Solo los instructores con permisos específicos pueden acceder a esta funcionalidad."
+      />
+    );
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -76,7 +90,7 @@ const CrearCarrera = () => {
             <div className={`mb-6 p-4 rounded-md ${
               message.type === 'error' 
                 ? 'bg-red-600/20 text-red-200 border border-red-600' 
-                : 'bg-green-600/20 text-green-200 border border-green-600'
+                : 'bg-[#BFFF71]/20 text-[#BFFF71] border border-[#BFFF71]'
             }`}>
               {message.text}
             </div>
@@ -94,7 +108,7 @@ const CrearCarrera = () => {
                 value={carrera.titulo}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-green-500"
+                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71]"
               />
             </div>
 
@@ -108,7 +122,7 @@ const CrearCarrera = () => {
                 value={carrera.tipo}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-green-500"
+                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71]"
               >
                 <option value="">Seleccione una opción</option>
                 <option value="Técnico">Técnico</option>
@@ -127,7 +141,7 @@ const CrearCarrera = () => {
                 value={carrera.horas}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-green-500"
+                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71]"
               />
             </div>
 
@@ -142,7 +156,7 @@ const CrearCarrera = () => {
                 onChange={handleChange}
                 required
                 rows="4"
-                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-green-500"
+                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71]"
               />
             </div>
 
@@ -157,7 +171,7 @@ const CrearCarrera = () => {
                 value={carrera.tituloObtener}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-green-500"
+                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71]"
               />
             </div>
 
@@ -171,7 +185,7 @@ const CrearCarrera = () => {
                 name="visibleHasta"
                 value={carrera.visibleHasta}
                 onChange={handleChange}
-                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-green-500"
+                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71]"
               />
             </div>
 
@@ -179,15 +193,15 @@ const CrearCarrera = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`px-6 py-3 text-white font-medium rounded-lg text-sm transition-colors
+                className={`px-6 py-3 text-black font-medium rounded-lg text-sm transition-colors
                   ${loading 
-                    ? 'bg-green-600/50 cursor-not-allowed' 
-                    : 'bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500'
+                    ? 'bg-[#BFFF71]/50 cursor-not-allowed' 
+                    : 'bg-[#BFFF71] hover:bg-[#a6e85c] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#BFFF71]'
                   }`}
               >
                 {loading ? (
                   <span className="flex items-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
