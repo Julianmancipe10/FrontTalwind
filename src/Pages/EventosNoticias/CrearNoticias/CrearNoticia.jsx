@@ -13,6 +13,7 @@ const CrearNoticia = () => {
     titulo: '',
     fecha: '',
     descripcion: '',
+    ubicacion: '',
     imagenes: [],
     enlace: '',
   });
@@ -88,43 +89,76 @@ const CrearNoticia = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if(stagedImages.length > 0) {
-      handleAcceptStagedImages();
+      alert('Por favor acepta las imágenes seleccionadas antes de crear la noticia.');
       return;
     }
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('titulo', formData.titulo);
-    formDataToSend.append('fecha', formData.fecha);
-    formDataToSend.append('descripcion', formData.descripcion);
-    
-    if (formData.enlace) {
-      formDataToSend.append('enlace', formData.enlace);
+    // Verificar que hay al menos una imagen
+    if(formData.imagenes.length === 0) {
+      alert('Por favor selecciona al menos una imagen para la noticia.');
+      return;
     }
-    
-    formData.imagenes.forEach((img, index) => {
-      formDataToSend.append(`imagen_${index}`, img.file);
-    });
 
-    console.log('Datos de la noticia a crear:', formData);
-    alert(`Noticia creada (simulada) con ${formData.imagenes.length} imágenes: ${formData.titulo}`);
-    
-    formData.imagenes.forEach(img => URL.revokeObjectURL(img.previewUrl));
-    setFormData({
-      titulo: '',
-      fecha: '',
-      descripcion: '',
-      imagenes: [],
-      enlace: '',
-    });
-    setSelectedFileNames([]);
-    setStagedImages([]);
-    
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+    try {
+      console.log('Enviando noticia al backend...');
+      
+      const formDataToSend = new FormData();
+      formDataToSend.append('titulo', formData.titulo);
+      formDataToSend.append('fecha', formData.fecha);
+      formDataToSend.append('descripcion', formData.descripcion);
+      formDataToSend.append('ubicacion', formData.ubicacion);
+      
+      if (formData.enlace) {
+        formDataToSend.append('enlace', formData.enlace);
+      }
+      
+      // Agregar todas las imágenes
+      formData.imagenes.forEach((img, index) => {
+        formDataToSend.append('imagenes', img.file);
+      });
+
+      const response = await fetch('http://localhost:5000/api/publicaciones/noticias', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: formDataToSend
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(`✅ ¡Noticia creada exitosamente!\nTítulo: ${result.noticia.titulo}\nID: ${result.noticia.id}\nImágenes: ${result.noticia.imagenes.length}`);
+        
+        console.log('Noticia creada:', result.noticia);
+        
+        // Limpiar formulario después del éxito
+        formData.imagenes.forEach(img => URL.revokeObjectURL(img.previewUrl));
+        setFormData({
+          titulo: '',
+          fecha: '',
+          descripcion: '',
+          ubicacion: '',
+          imagenes: [],
+          enlace: '',
+        });
+        setSelectedFileNames([]);
+        setStagedImages([]);
+        
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      } else {
+        alert(`❌ Error al crear noticia: ${result.message}`);
+        console.error('Error del servidor:', result);
+      }
+    } catch (error) {
+      console.error('Error al enviar noticia:', error);
+      alert('❌ Error de conexión. Verifica que el servidor esté funcionando.');
     }
   };
 
@@ -189,6 +223,22 @@ const CrearNoticia = () => {
                 onChange={handleChange}
                 rows={4}
                 className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71]"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="ubicacion" className="block text-sm font-medium text-white mb-1">
+                Ubicación*
+              </label>
+              <input
+                type="text"
+                id="ubicacion"
+                name="ubicacion"
+                value={formData.ubicacion}
+                onChange={handleChange}
+                required
+                placeholder="Ej: Centro de Comercio y Turismo - Quindío"
+                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71] placeholder-gray-400"
               />
             </div>
 

@@ -151,13 +151,13 @@ export const Header = () => {
                           </Link>
                         )}
                         {hasPermission(PERMISOS.CREAR_CARRERA) && (
-                          <Link
+                            <Link
                             to="/crear-carrera"
-                            className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
-                            onClick={() => setIsPublicacionesOpen(false)}
-                          >
+                              className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
+                              onClick={() => setIsPublicacionesOpen(false)}
+                            >
                             Crear Carrera
-                          </Link>
+                            </Link>
                         )}
                       </div>
                     </div>
@@ -385,13 +385,13 @@ export const Header = () => {
                     </Link>
                   )}
                   {hasPermission(PERMISOS.CREAR_CARRERA) && (
-                    <Link
+                      <Link
                       to="/crear-carrera"
-                      className="block px-4 py-2 text-sm text-white hover:bg-gray-700 rounded-md"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
+                        className="block px-4 py-2 text-sm text-white hover:bg-gray-700 rounded-md"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
                       Crear Carrera
-                    </Link>
+                      </Link>
                   )}
                 </div>
               )}

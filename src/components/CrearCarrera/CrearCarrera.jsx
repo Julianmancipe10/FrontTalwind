@@ -15,6 +15,7 @@ const CrearCarrera = () => {
     horas: '',
     descripcion: '',
     tituloObtener: '',
+    ubicacion: '',
     visibleHasta: ''
   });
   const [loading, setLoading] = useState(false);
@@ -49,19 +50,58 @@ const CrearCarrera = () => {
     }
 
     try {
-      console.log('Nueva carrera:', carrera);
-      setMessage({ type: 'success', text: '¡Carrera creada exitosamente!' });
-      setCarrera({ 
-        titulo: '',
-        tipo: '',
-        horas: '',
-        descripcion: '',
-        tituloObtener: '',
-        visibleHasta: ''
+      console.log('Enviando carrera al backend...');
+      
+      const response = await fetch('http://localhost:5000/api/publicaciones/carreras', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({
+          titulo: carrera.titulo,
+          tipo: carrera.tipo,
+          horas: carrera.horas,
+          descripcion: carrera.descripcion,
+          tituloObtener: carrera.tituloObtener,
+          ubicacion: carrera.ubicacion,
+          visibleHasta: carrera.visibleHasta
+        })
       });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setMessage({ 
+          type: 'success', 
+          text: `¡Carrera "${result.carrera.titulo}" creada exitosamente! ID: ${result.carrera.id}` 
+        });
+        
+        console.log('Carrera creada:', result.carrera);
+        
+        // Limpiar formulario después del éxito
+        setCarrera({ 
+          titulo: '',
+          tipo: '',
+          horas: '',
+          descripcion: '',
+          tituloObtener: '',
+          ubicacion: '',
+          visibleHasta: ''
+        });
+      } else {
+        setMessage({ 
+          type: 'error', 
+          text: `Error al crear carrera: ${result.message}` 
+        });
+        console.error('Error del servidor:', result);
+      }
     } catch (error) {
-      console.error('Error al crear la carrera:', error);
-      setMessage({ type: 'error', text: 'Error al crear la carrera. Por favor, intente nuevamente.' });
+      console.error('Error al enviar carrera:', error);
+      setMessage({ 
+        type: 'error', 
+        text: 'Error de conexión. Verifica que el servidor esté funcionando.' 
+      });
     } finally {
       setLoading(false);
     }
@@ -172,6 +212,22 @@ const CrearCarrera = () => {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71]"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="ubicacion" className="block text-sm font-medium text-white mb-1">
+                Ubicación
+              </label>
+              <input
+                type="text"
+                id="ubicacion"
+                name="ubicacion"
+                value={carrera.ubicacion}
+                onChange={handleChange}
+                required
+                placeholder="Ej: Centro de Comercio y Turismo - Quindío"
+                className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71] placeholder-gray-400"
               />
             </div>
 

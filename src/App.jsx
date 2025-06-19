@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import Eventos from "./Pages/EventosNoticias/Eventos";
+import Noticias from "./Pages/EventosNoticias/Noticias";
 import FAQ from "./Pages/FAQ/FAQ";
 import VerMasEvento from "./Pages/EventosNoticias/VerMas/VerMasEvento";
 import VerMasNoticia from "./Pages/EventosNoticias/VerMas/VerMasNoticia";
@@ -13,9 +14,11 @@ import ValidationManager from "./Pages/Admin/ValidationManager";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { PERMISOS } from "./constants/roles";
 import CarrerasTecnologicas from "./components/CarrerasTecnologicas/CarrerasTecnologicas";
+import CarrerasCortas from "./components/CarrerasCortas/CarrerasCortas";
 import CrearCarrera from "./components/CrearCarrera/CrearCarrera";
 import CrearEvento from "./Pages/EventosNoticias/CrearEventos/CrearEvento";
 import CrearNoticia from "./Pages/EventosNoticias/CrearNoticias/CrearNoticia";
+import VerMasCarrera from "./Pages/Carreras/VerMasCarrera";
 import Footer from "./components/Footer";
 
 // Componente para verificar si el usuario es administrador
@@ -38,11 +41,14 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/eventos" element={<Eventos />} />
+            <Route path="/noticias" element={<Noticias />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/horarios" element={<Horario />} />
             <Route path="/evento/:id" element={<VerMasEvento />} />
             <Route path="/noticia/:id" element={<VerMasNoticia />} />
+            <Route path="/carrera/:id" element={<VerMasCarrera />} />
             <Route path="/carreras-tecnologicas" element={<CarrerasTecnologicas />} />
+            <Route path="/carreras-cortas" element={<CarrerasCortas />} />
             <Route path="/crear-carrera" element={<CrearCarrera />} />
             
             {/* Rutas para creación de contenido */}

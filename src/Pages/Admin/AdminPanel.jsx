@@ -84,21 +84,7 @@ const AdminPanel = () => {
           </div>
         );
 
-      case 'roles':
-        return (
-          <div className="space-y-4 sm:space-y-6">
-            <h2 className="text-xl sm:text-2xl font-semibold text-white">Gestión de Roles</h2>
-            <p className="text-gray-300 text-sm sm:text-base">
-              Administra los roles del sistema y define qué permisos tiene cada rol.
-            </p>
-            {hasPermission(PERMISOS.ASIGNAR_ROLES) && (
-              <div className="mt-4 sm:mt-6 bg-[#252b3b] rounded-lg p-4 sm:p-6">
-                <h3 className="text-white font-medium mb-3">Asignación de Roles</h3>
-                <p className="text-gray-400 text-sm">Funcionalidad en desarrollo...</p>
-              </div>
-            )}
-          </div>
-        );
+
 
       case 'validations':
         return (
@@ -113,7 +99,7 @@ const AdminPanel = () => {
                 Revisa y aprueba o rechaza las solicitudes de nuevos instructores y funcionarios.
               </p>
               <Link 
-                to="/admin/validations"
+                to="/admin/validaciones"
                 className="inline-block w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-[#39B54A] hover:bg-[#2d8f37] text-white rounded-lg transition-colors duration-200 font-medium shadow-sm text-sm sm:text-base text-center"
               >
                 <i className="fas fa-user-check mr-2"></i>
@@ -179,16 +165,6 @@ const AdminPanel = () => {
                   <i className="fas fa-key mr-1"></i>
                   Permisos
                 </button>
-                <button 
-                  className={`w-full px-2 py-2 text-center rounded-lg font-medium transition-colors duration-200 text-xs
-                    ${activeTab === 'roles' 
-                      ? 'bg-[#39B54A] text-white shadow-lg' 
-                      : 'bg-[#1e2536] hover:bg-[#252b3b] text-gray-300 border border-gray-700'}`}
-                  onClick={() => setActiveTab('roles')}
-                >
-                  <i className="fas fa-user-tag mr-1"></i>
-                  Roles
-                </button>
                 {isAdmin && (
                   <button 
                     className={`w-full px-2 py-2 text-center rounded-lg font-medium transition-colors duration-200 text-xs
@@ -234,16 +210,6 @@ const AdminPanel = () => {
                   <i className="fas fa-key mr-1"></i>
                   Permisos
                 </button>
-                <button 
-                  className={`flex-shrink-0 min-w-max px-3 py-2 text-center rounded-lg font-medium transition-colors duration-200 text-sm whitespace-nowrap
-                    ${activeTab === 'roles' 
-                      ? 'bg-[#39B54A] text-white shadow-lg' 
-                      : 'bg-[#1e2536] hover:bg-[#252b3b] text-gray-300 border border-gray-700'}`}
-                  onClick={() => setActiveTab('roles')}
-                >
-                  <i className="fas fa-user-tag mr-1"></i>
-                  Roles
-                </button>
                 {isAdmin && (
                   <button 
                     className={`flex-shrink-0 min-w-max px-3 py-2 text-center rounded-lg font-medium transition-colors duration-200 text-sm whitespace-nowrap
@@ -280,16 +246,6 @@ const AdminPanel = () => {
               >
                 <i className="fas fa-key mr-2"></i>
                 Permisos
-              </button>
-              <button 
-                className={`w-full px-4 py-3 text-left rounded-lg font-medium transition-colors duration-200 text-sm
-                  ${activeTab === 'roles' 
-                    ? 'bg-[#39B54A] text-white' 
-                    : 'bg-[#1e2536] hover:bg-[#252b3b] text-gray-300 border border-gray-700'}`}
-                onClick={() => setActiveTab('roles')}
-              >
-                <i className="fas fa-user-tag mr-2"></i>
-                Roles
               </button>
               
               {/* Solo mostrar validaciones para administradores */}

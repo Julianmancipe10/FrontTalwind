@@ -8,7 +8,7 @@ import { getCarreras } from "../../services/publicaciones";
 // Imagen por defecto para carreras
 import defaultCarrera from "../../assets/images/optimized/optimized_slider1.jpg";
 
-const CarrerasTecnologicas = () => {
+const CarrerasCortas = () => {
   const [carreras, setCarreras] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -19,12 +19,12 @@ const CarrerasTecnologicas = () => {
         setLoading(true);
         const carrerasData = await getCarreras();
         
-                 if (carrerasData) {
-           // Solo mostrar tecnólogos en esta vista
-           const tecnologos = carrerasData.tecnologos || [];
-           
-           // Formatear datos para mostrar
-           const carrerasFormateadas = tecnologos.map(carrera => {
+        if (carrerasData) {
+          // Solo mostrar cursos técnicos en esta vista
+          const cursos = carrerasData.cursos || [];
+          
+          // Formatear datos para mostrar
+          const carrerasFormateadas = cursos.map(carrera => {
             // Extraer información de la descripción extendida
             const descripcionCompleta = carrera.Descripción || '';
             const descripcionLineas = descripcionCompleta.split('\n');
@@ -42,7 +42,7 @@ const CarrerasTecnologicas = () => {
               tituloObtener: tituloMatch ? tituloMatch[1] : 'No especificado',
               ubicacion: carrera.Ubicacion,
               fecha: carrera.Fecha,
-              tipo: carrera.TipoPublicacion === '3' ? 'Técnico' : 'Tecnólogo',
+              tipo: 'Técnico', // Siempre será técnico en esta vista
               creador: `${carrera.CreadorNombre || ''} ${carrera.CreadorApellido || ''}`.trim(),
               fechaCreacion: carrera.FechaCreacion
             };
@@ -53,8 +53,8 @@ const CarrerasTecnologicas = () => {
           setCarreras([]);
         }
       } catch (error) {
-        console.error('Error al cargar carreras:', error);
-        setError('Error al cargar las carreras. Por favor, intenta de nuevo.');
+        console.error('Error al cargar carreras cortas:', error);
+        setError('Error al cargar las carreras cortas. Por favor, intenta de nuevo.');
       } finally {
         setLoading(false);
       }
@@ -62,14 +62,6 @@ const CarrerasTecnologicas = () => {
 
     fetchCarreras();
   }, []);
-
-  const getCardColor = (tipo) => {
-    return tipo === 'Técnico' ? 'bg-[#39B54A]' : 'bg-[#39B54A]';
-  };
-
-  const getCardAccent = (tipo) => {
-    return tipo === 'Técnico' ? 'border-[#39B54A]' : 'border-[#39B54A]';
-  };
 
   if (loading) {
     return (
@@ -99,8 +91,8 @@ const CarrerasTecnologicas = () => {
               </svg>
               Atrás
             </button>
-            <h1 className="text-4xl font-bold text-white mb-2">Carreras Tecnológicas</h1>
-            <p className="text-gray-300">Explora nuestros programas tecnológicos y especialízate en el área que más te guste</p>
+            <h1 className="text-4xl font-bold text-white mb-2">Carreras Cortas</h1>
+            <p className="text-gray-300">Programas especializados para una rápida inserción laboral</p>
           </div>
           
           <PermissionWrapper requiredPermissions={[PERMISOS.CREAR_CARRERA]}>
@@ -129,8 +121,8 @@ const CarrerasTecnologicas = () => {
                 <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
-                <h3 className="text-xl font-semibold text-white mb-2">No hay carreras tecnológicas disponibles</h3>
-                <p className="text-gray-400 mb-6">Sé el primero en crear una carrera tecnológica para la comunidad</p>
+                <h3 className="text-xl font-semibold text-white mb-2">No hay carreras cortas disponibles</h3>
+                <p className="text-gray-400 mb-6">Sé el primero en crear una carrera técnica para la comunidad</p>
                 <PermissionWrapper requiredPermissions={[PERMISOS.CREAR_CARRERA]}>
                   <Link
                     to="/crear-carrera"
@@ -155,10 +147,10 @@ const CarrerasTecnologicas = () => {
                 key={carrera.id}
                 className="bg-gray-800 rounded-xl shadow-lg overflow-hidden hover:shadow-2xl hover:shadow-[#39B54A]/20 transition-all duration-300 hover:scale-105 border border-gray-700 hover:border-[#39B54A]/50"
               >
-                {/* Header de la tarjeta */}
-                <div className={`${getCardColor(carrera.tipo)} p-4`}>
+                {/* Header de la tarjeta - Verde para técnicos */}
+                <div className="bg-[#39B54A] p-4">
                   <h3 className="text-xl font-bold text-white mb-1">{carrera.titulo}</h3>
-                  <p className="text-gray-100 text-sm">Carrera {carrera.tipo}</p>
+                  <p className="text-gray-100 text-sm">Curso {carrera.tipo}</p>
                 </div>
 
                 {/* Contenido de la tarjeta */}
@@ -207,7 +199,7 @@ const CarrerasTecnologicas = () => {
                     )}
                   </div>
 
-                  {/* Botón Ver Más */}
+                  {/* Botón Ver Más - Verde para técnicos */}
                   <Link
                     to={`/carrera/${carrera.id}`}
                     className="w-full bg-[#39B54A] hover:bg-[#2d8f3a] text-white px-4 py-3 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#39B54A]/20"
@@ -228,4 +220,4 @@ const CarrerasTecnologicas = () => {
   );
 };
 
-export default CarrerasTecnologicas;
+export default CarrerasCortas;

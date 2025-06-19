@@ -13,6 +13,7 @@ const CrearEvento = () => {
     titulo: '',
     fecha: '',
     descripcion: '',
+    ubicacion: '',
     enlace: '',
     imagen: null,
     imagenId: ''
@@ -21,6 +22,7 @@ const CrearEvento = () => {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
   const fileInputRef = useRef(null);
 
   // Verificar permisos DESPUÉS de todos los hooks
@@ -39,6 +41,7 @@ const CrearEvento = () => {
       const file = files[0];
       const imageUrl = URL.createObjectURL(file);
       setPreviewUrl(imageUrl);
+      setSelectedFile(file);
       setShowPreview(true);
       setSelectedFileName(file.name);
     } else {
@@ -50,11 +53,11 @@ const CrearEvento = () => {
   };
 
   const handleAcceptImage = () => {
-    if (previewUrl) {
+    if (previewUrl && selectedFile) {
       const imagenId = `img_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       setFormData(prevState => ({
         ...prevState,
-        imagen: previewUrl,
+        imagen: selectedFile,
         imagenId: imagenId
       }));
       setShowPreview(false);
@@ -66,6 +69,7 @@ const CrearEvento = () => {
       URL.revokeObjectURL(previewUrl);
     }
     setPreviewUrl(null);
+    setSelectedFile(null);
     setShowPreview(false);
     setSelectedFileName('');
     setFormData(prevState => ({
@@ -78,38 +82,69 @@ const CrearEvento = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('handleSubmit reached');
-    const formDataToSend = new FormData();
-    formDataToSend.append('titulo', formData.titulo);
-    formDataToSend.append('fecha', formData.fecha);
-    formDataToSend.append('descripcion', formData.descripcion);
-    formDataToSend.append('enlace', formData.enlace);
-    formDataToSend.append('imagen', formData.imagen);
-    formDataToSend.append('imagenId', formData.imagenId);
-
-    console.log('Datos del evento a crear:', formData);
-    alert('Evento creado (simulado): ' + formData.titulo);
     
-    console.log('Clearing form');
-    if (previewUrl) {
-      URL.revokeObjectURL(previewUrl);
+    // Verificar que hay una imagen seleccionada y aceptada
+    if (!formData.imagen) {
+      alert('Por favor selecciona y acepta una imagen antes de crear el evento.');
+      return;
     }
     
-    setFormData({
-      titulo: '',
-      fecha: '',
-      descripcion: '',
-      enlace: '',
-      imagen: null,
-      imagenId: ''
-    });
-    setPreviewUrl(null);
-    setShowPreview(false);
-    setSelectedFileName('');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+    try {
+      console.log('Enviando evento al backend...');
+      
+      const formDataToSend = new FormData();
+      formDataToSend.append('titulo', formData.titulo);
+      formDataToSend.append('fecha', formData.fecha);
+      formDataToSend.append('descripcion', formData.descripcion);
+      formDataToSend.append('ubicacion', formData.ubicacion);
+      formDataToSend.append('enlace', formData.enlace);
+      formDataToSend.append('imagen', formData.imagen); // Archivo real
+
+      const response = await fetch('http://localhost:5000/api/publicaciones/eventos', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: formDataToSend
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert(`✅ ¡Evento creado exitosamente!\nTítulo: ${result.evento.titulo}\nID: ${result.evento.id}`);
+        
+        console.log('Evento creado:', result.evento);
+        
+        // Limpiar formulario después del éxito
+        if (previewUrl) {
+          URL.revokeObjectURL(previewUrl);
+        }
+        
+        setFormData({
+          titulo: '',
+          fecha: '',
+          descripcion: '',
+          ubicacion: '',
+          enlace: '',
+          imagen: null,
+          imagenId: ''
+        });
+        setPreviewUrl(null);
+        setSelectedFile(null);
+        setShowPreview(false);
+        setSelectedFileName('');
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
+      } else {
+        alert(`❌ Error al crear evento: ${result.message}`);
+        console.error('Error del servidor:', result);
+      }
+    } catch (error) {
+      console.error('Error al enviar evento:', error);
+      alert('❌ Error de conexión. Verifica que el servidor esté funcionando.');
     }
   };
 
@@ -176,6 +211,22 @@ const CrearEvento = () => {
                   onChange={handleChange} 
                   rows="4"
                   className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71]"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="ubicacion" className="block text-sm font-medium text-white mb-1">
+                  Ubicación *
+                </label>
+                <input 
+                  type="text" 
+                  id="ubicacion" 
+                  name="ubicacion" 
+                  value={formData.ubicacion} 
+                  onChange={handleChange} 
+                  required
+                  placeholder="Ej: Centro de Comercio y Turismo - Quindío"
+                  className="w-full px-4 py-3 bg-gray-700 text-white border-2 border-gray-600 rounded-lg focus:outline-none focus:border-[#BFFF71] placeholder-gray-400"
                 />
               </div>
 
@@ -254,9 +305,24 @@ const CrearEvento = () => {
               )}
 
               {formData.imagenId && !showPreview && (
-                <p className="mt-2 text-sm text-gray-400">
-                  ID de la imagen: {formData.imagenId}
-                </p>
+                <div className="mt-2 p-3 bg-[#BFFF71]/20 border border-[#BFFF71] rounded-lg">
+                  <p className="text-sm text-[#BFFF71] font-medium">
+                    ✅ Imagen aceptada: {formData.imagen?.name}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    ID: {formData.imagenId}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData(prev => ({ ...prev, imagen: null, imagenId: '' }));
+                      setSelectedFile(null);
+                    }}
+                    className="mt-2 text-xs text-red-400 hover:text-red-300 underline"
+                  >
+                    Cambiar imagen
+                  </button>
+                </div>
               )}
             </div>
 

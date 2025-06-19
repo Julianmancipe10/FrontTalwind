@@ -4,60 +4,81 @@ import { Link } from 'react-router-dom';
 import { Header } from "../../Layouts/Header/Header";
 import PermissionWrapper from "../../components/PermissionWrapper/PermissionWrapper";
 import { PERMISOS } from "../../constants/roles";
+import { getEventos } from "../../services/publicaciones";
 
+// Fallback para imágenes por defecto
 import slider1 from "../../assets/images/optimized/optimized_slider1.jpg";
 import slider2 from "../../assets/images/optimized/optimized_slider2.jpg";
 import slider3 from "../../assets/images/optimized/optimized_slider3.jpg";
 
-const cards = [
+const defaultCards = [
   {
     id: 1,
     image: slider1,
-    badge: "Titulo",
-    title: "Pequeña descrpcion del primer evento",
-    description: ""
+    badge: "Evento de ejemplo",
+    title: "No hay eventos disponibles",
+    description: "Sé el primero en crear un evento"
   },
   {
     id: 2,
     image: slider2,
-    badge: "Titulo",
-    title: "Pequeña descrpcion del segundo evento",
-    description: ""
+    badge: "Evento de ejemplo",
+    title: "Crea eventos increíbles",
+    description: "Comparte tus eventos con la comunidad"
   },
   {
     id: 3,
     image: slider3,
-    badge: "Titulo",
-    title: "Pequeña descrpcion del tercer evento y así sucesivamente",
-    description: ""
+    badge: "Evento de ejemplo",
+    title: "Conecta con otros aprendices",
+    description: "Los eventos son una gran manera de socializar"
   }
 ];
 
 const Eventos = () => {
+  const [eventos, setEventos] = useState([]);
   const [imagesLoaded, setImagesLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const cardsContainerRef = useRef(null);
 
   useEffect(() => {
-    const loadImages = async () => {
+    const fetchEventos = async () => {
       try {
-        const imagePromises = cards.map((card) => {
-          return new Promise((resolve, reject) => {
-            const img = new Image();
-            img.src = card.image;
-            img.onload = resolve;
-            img.onerror = reject;
-          });
-        });
+        setLoading(true);
+        const eventosData = await getEventos();
         
-        await Promise.all(imagePromises);
+        if (eventosData && eventosData.length > 0) {
+          // Convertir datos del backend al formato esperado
+          const eventosFormateados = eventosData.map(evento => ({
+            id: evento.ID_Evento,
+            image: evento.ImagenSlider ? `http://localhost:5000${evento.ImagenSlider}` : slider1,
+            badge: "Evento",
+            title: evento.Nombre,
+            description: evento.Descripción?.substring(0, 100) + (evento.Descripción?.length > 100 ? '...' : ''),
+            fecha: evento.Fecha,
+            ubicacion: evento.Ubicacion,
+            creador: `${evento.CreadorNombre || ''} ${evento.CreadorApellido || ''}`.trim()
+          }));
+          setEventos(eventosFormateados);
+        } else {
+          // Si no hay eventos, usar los de ejemplo
+          setEventos(defaultCards);
+        }
+        
         setImagesLoaded(true);
       } catch (error) {
-        console.error('Error al cargar las imágenes:', error);
+        console.error('Error al cargar eventos:', error);
+        setError('Error al cargar eventos');
+        // En caso de error, usar eventos de ejemplo
+        setEventos(defaultCards);
         setImagesLoaded(true);
+      } finally {
+        setLoading(false);
       }
     };
-    
-    loadImages();
+
+    fetchEventos();
   }, []);
 
   const scroll = (direction) => {
@@ -73,7 +94,9 @@ const Eventos = () => {
   return (
     <>
       <Header />
+      
       <div className="relative px-4 py-6">
+        {/* Título y botón de crear */}
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl md:text-4xl font-bold text-[#BFFF71]">
             Eventos
@@ -91,6 +114,12 @@ const Eventos = () => {
             </Link>
           </PermissionWrapper>
         </div>
+
+        {error && (
+          <div className="bg-red-600/20 text-red-200 p-4 rounded-lg mb-4 border border-red-600">
+            {error}
+          </div>
+        )}
 
         <div className="relative">
           <button 
@@ -111,32 +140,54 @@ const Eventos = () => {
               WebkitOverflowScrolling: 'touch'
             }}
           >
-            {imagesLoaded ? (
-              cards.map((card) => (
+            {loading ? (
+              <div className="flex justify-center items-center h-72 w-full text-white text-lg font-medium">
+                <div className="animate-pulse flex space-x-4">
+                  <div className="rounded-full bg-gray-700 h-12 w-12"></div>
+                  <div className="flex-1 space-y-4 py-1">
+                    <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+                    <div className="space-y-2">
+                      <div className="h-4 bg-gray-700 rounded"></div>
+                      <div className="h-4 bg-gray-700 rounded w-5/6"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              eventos.map((evento) => (
                 <div
-                  key={card.id}
+                  key={evento.id}
                   className="flex-none w-full sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] snap-start"
                 >
                   <div className="bg-gray-800/40 backdrop-blur-sm rounded-xl overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#BFFF71]/20">
                     <div className="relative aspect-video">
                       <img
-                        src={card.image}
-                        alt={card.title}
+                        src={evento.image}
+                        alt={evento.title}
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = slider1; // Fallback image
+                        }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
                       <div className="absolute bottom-4 left-4 right-4">
                         <span className="inline-block px-3 py-1 bg-[#BFFF71] text-black text-sm font-semibold rounded-full mb-2">
-                          {card.badge}
+                          {evento.badge}
                         </span>
                         <h3 className="text-white text-lg font-semibold line-clamp-2">
-                          {card.title}
+                          {evento.title}
                         </h3>
+                        {evento.creador && (
+                          <p className="text-gray-300 text-sm mt-1">
+                            Por: {evento.creador}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="p-4">
                       <Link
-                        to={`/evento/${card.id}`}
+                        to={`/evento/${evento.id}`}
                         className="inline-flex items-center text-[#BFFF71] hover:text-white transition-colors duration-300 group"
                       >
                         Ver más
@@ -151,19 +202,6 @@ const Eventos = () => {
                   </div>
                 </div>
               ))
-            ) : (
-              <div className="flex justify-center items-center h-72 w-full text-white text-lg font-medium">
-                <div className="animate-pulse flex space-x-4">
-                  <div className="rounded-full bg-gray-700 h-12 w-12"></div>
-                  <div className="flex-1 space-y-4 py-1">
-                    <div className="h-4 bg-gray-700 rounded w-3/4"></div>
-                    <div className="space-y-2">
-                      <div className="h-4 bg-gray-700 rounded"></div>
-                      <div className="h-4 bg-gray-700 rounded w-5/6"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             )}
           </div>
 
