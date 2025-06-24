@@ -1,102 +1,314 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { getCalificacionesPorInstructor } from '../services/calificacionService';
 
 const InstructorModal = ({ instructor, onClose }) => {
+  const [calificaciones, setCalificaciones] = useState([]);
+  const [loadingCalificaciones, setLoadingCalificaciones] = useState(false);
+  const [activeTab, setActiveTab] = useState('perfil');
+
+  // Cargar calificaciones del instructor
+  useEffect(() => {
+    const cargarCalificaciones = async () => {
+      if (instructor && activeTab === 'calificaciones') {
+        try {
+          setLoadingCalificaciones(true);
+          const data = await getCalificacionesPorInstructor(instructor.id);
+          setCalificaciones(data);
+        } catch (error) {
+          console.error('Error al cargar calificaciones:', error);
+        } finally {
+          setLoadingCalificaciones(false);
+        }
+      }
+    };
+
+    cargarCalificaciones();
+  }, [instructor, activeTab]);
+
   if (!instructor) return null;
 
+  // Obtener imagen del instructor
+  const getImagenInstructor = () => {
+    if (instructor.foto) {
+      return `http://localhost:5000${instructor.foto}`;
+    }
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(instructor.nombre + ' ' + instructor.apellido)}&background=4ade80&color=ffffff&size=400`;
+  };
+
+  // Renderizar estrellas
+  const renderEstrellas = (calificacion) => {
+    const rating = parseFloat(calificacion) || 0;
+    return Array.from({ length: 5 }, (_, i) => (
+      <span 
+        key={i} 
+        className={`text-lg ${
+          i < Math.floor(rating) ? 'text-yellow-400' : 
+          i < rating ? 'text-yellow-300' : 'text-gray-400'
+        }`}
+      >
+        ★
+      </span>
+    ));
+  };
+
+  // Formatear fecha
+  const formatearFecha = (fecha) => {
+    return new Date(fecha).toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all duration-300 overflow-y-auto">
-      <div className="bg-[#242937] rounded-2xl w-full max-w-4xl overflow-hidden relative animate-fadeIn shadow-2xl transform transition-all duration-300 scale-100 hover:scale-[1.02] my-4">
-        <button
-          onClick={onClose}
-          className="absolute top-2 right-2 md:top-4 md:right-4 text-gray-400 hover:text-white transition-colors duration-200 z-10 bg-black/50 p-2 rounded-full hover:bg-black/70"
-        >
-          <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-
-        <div className="flex flex-col md:flex-row">
-          <div className="w-full md:w-1/2 relative group">
-            <div className="aspect-[4/3] md:aspect-[3/4] overflow-hidden">
-              <img
-                src={instructor.imagen}
-                alt={instructor.nombre}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+    <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+      <div className="bg-[#1a1f2e] rounded-2xl max-w-4xl w-full max-h-[95vh] overflow-y-auto shadow-2xl border border-gray-600">
+        {/* Header */}
+        <div className="relative bg-gradient-to-r from-[#1a1f2e] to-gray-800 p-6 text-white">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-300 hover:text-red-400 text-3xl transition-colors duration-200 hover:bg-red-50/10 rounded-full w-10 h-10 flex items-center justify-center"
+          >
+            ×
+          </button>
+          
+          <div className="flex flex-col md:flex-row gap-6 items-center">
+            {/* Foto del instructor */}
+            <div className="relative">
+              <img 
+                src={getImagenInstructor()} 
+                alt={`${instructor.nombre} ${instructor.apellido}`}
+                className="w-32 h-32 rounded-full object-cover border-4 border-sena-green shadow-2xl"
+                onError={(e) => {
+                  e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(instructor.nombre + ' ' + instructor.apellido)}&background=4ade80&color=ffffff&size=400`;
+                }}
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#242937] via-transparent to-transparent opacity-70"></div>
+              <div className="absolute -bottom-2 -right-2">
+                <span className={`px-3 py-1 text-sm font-semibold rounded-full shadow-lg ${
+                  instructor.rol === 'instructor' 
+                    ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white' 
+                    : 'bg-gradient-to-r from-purple-500 to-purple-600 text-white'
+                }`}>
+                  {instructor.rol === 'instructor' ? '👨‍🏫 Instructor' : '👔 Funcionario'}
+                </span>
+              </div>
+            </div>
+
+            {/* Información básica */}
+            <div className="text-center md:text-left">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-2 text-white">
+                {instructor.nombre} {instructor.apellido}
+              </h2>
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
+                <span className="text-sena-green text-lg">💼</span>
+                <p className="text-xl text-sena-green font-semibold">
+                  {instructor.especialidad || 'Especialidad no especificada'}
+                </p>
+              </div>
+              
+              {/* Calificación */}
+              <div className="flex justify-center md:justify-start items-center gap-3 mb-3">
+                <div className="flex">
+                  {renderEstrellas(instructor.calificacionPromedio)}
+                </div>
+                <span className="text-lg font-bold text-yellow-400">
+                  ({instructor.calificacionPromedio} de 5)
+                </span>
+                <span className="text-sm text-gray-400">
+                  • {instructor.totalCalificaciones} {instructor.totalCalificaciones === 1 ? 'reseña' : 'reseñas'}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-center md:justify-start gap-2">
+                <span className="text-blue-400 text-lg">📧</span>
+                <p className="text-gray-300">
+                  {instructor.correo}
+                </p>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div className="p-4 md:p-8 w-full md:w-1/2 space-y-4 md:space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2 md:mb-4 leading-tight">{instructor.nombre}</h2>
-            
-            <div className="flex items-center mb-4 md:mb-6">
-              <div className="flex gap-1">
-                {Array.from({ length: 5 }, (_, i) => (
-                  <span
-                    key={i}
-                    className={`text-xl md:text-2xl transition-colors duration-200 ${
-                      i < instructor.calificacion ? 'text-yellow-400' : 'text-gray-600'
-                    }`}
-                  >
-                    ★
-                  </span>
-                ))}
+        {/* Tabs */}
+        <div className="border-b border-gray-600">
+          <div className="flex">
+            <button
+              onClick={() => setActiveTab('perfil')}
+              className={`px-6 py-3 font-semibold transition-all duration-200 flex items-center gap-2 ${
+                activeTab === 'perfil'
+                  ? 'border-b-2 border-sena-green text-sena-green bg-gray-800/50'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-700/30'
+              }`}
+            >
+              <span>👤</span>
+              Perfil
+            </button>
+            <button
+              onClick={() => setActiveTab('calificaciones')}
+              className={`px-6 py-3 font-semibold transition-all duration-200 flex items-center gap-2 ${
+                activeTab === 'calificaciones'
+                  ? 'border-b-2 border-sena-green text-sena-green bg-gray-800/50'
+                  : 'text-gray-400 hover:text-white hover:bg-gray-700/30'
+              }`}
+            >
+              <span>⭐</span>
+              Calificaciones ({instructor.totalCalificaciones})
+            </button>
+          </div>
+        </div>
+
+        {/* Contenido de las tabs */}
+        <div className="p-6">
+          {activeTab === 'perfil' && (
+            <div className="space-y-6">
+              {/* Experiencia */}
+              {instructor.experiencia && (
+                <div className="bg-gradient-to-br from-gray-800 to-gray-700 p-6 rounded-xl border border-gray-600 shadow-sm">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="text-blue-400">📚</span>
+                    Experiencia
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed text-base">
+                    {instructor.experiencia}
+                  </p>
+                </div>
+              )}
+
+              {/* Cursos */}
+              {instructor.cursos && instructor.cursos.length > 0 && (
+                <div className="bg-gradient-to-br from-gray-800 to-gray-700 p-6 rounded-xl border border-gray-600 shadow-sm">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="text-sena-green">🎓</span>
+                    Cursos que enseña
+                  </h3>
+                  <div className="flex flex-wrap gap-3">
+                    {instructor.cursos.map((curso, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-2 bg-gradient-to-r from-sena-green to-sena-green-dark text-white rounded-full text-sm font-semibold shadow-lg hover:scale-105 transition-transform duration-200"
+                      >
+                        {curso}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Biografía */}
+              {instructor.biografia && (
+                <div className="bg-gradient-to-br from-gray-800 to-gray-700 p-6 rounded-xl border border-gray-600 shadow-sm">
+                  <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                    <span className="text-purple-400">👨‍🏫</span>
+                    Acerca de mí
+                  </h3>
+                  <p className="text-gray-300 leading-relaxed text-base">
+                    {instructor.biografia}
+                  </p>
+                </div>
+              )}
+
+              {/* Información adicional */}
+              <div className="bg-gradient-to-br from-gray-800 to-gray-700 p-6 rounded-xl border border-gray-600 shadow-sm">
+                <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                  <span className="text-yellow-400">📋</span>
+                  Información adicional
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6 text-base">
+                  <div className="flex items-center gap-3">
+                    <span className="text-gray-400 font-medium">Rol:</span>
+                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                      instructor.rol === 'instructor' 
+                        ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' 
+                        : 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+                    }`}>
+                      {instructor.rol === 'instructor' ? '👨‍🏫 Instructor' : '👔 Funcionario'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-gray-400 font-medium">Miembro desde:</span>
+                    <span className="text-sena-green font-semibold">
+                      {formatearFecha(instructor.fechaRegistro)}
+                    </span>
+                  </div>
+                </div>
               </div>
-              <span className="ml-2 text-gray-400 text-xs md:text-sm">
-                ({instructor.calificacion} de 5)
-              </span>
             </div>
+          )}
 
-            <div className="space-y-4 md:space-y-6">
-              <div className="transform transition-all duration-300 hover:translate-x-2">
-                <h3 className="text-base md:text-lg font-semibold text-green-400 mb-1 md:mb-2 flex items-center gap-2">
-                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  Especialidad
-                </h3>
-                <p className="text-gray-300 text-sm md:text-base">{instructor.especialidad}</p>
-              </div>
-
-              <div className="transform transition-all duration-300 hover:translate-x-2">
-                <h3 className="text-base md:text-lg font-semibold text-green-400 mb-1 md:mb-2 flex items-center gap-2">
-                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                  </svg>
-                  Experiencia
-                </h3>
-                <p className="text-gray-300 text-sm md:text-base">{instructor.experiencia}</p>
-              </div>
-
-              <div className="transform transition-all duration-300 hover:translate-x-2">
-                <h3 className="text-base md:text-lg font-semibold text-green-400 mb-1 md:mb-2 flex items-center gap-2">
-                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                  </svg>
-                  Cursos
-                </h3>
-                <ul className="list-none space-y-1 md:space-y-2 text-gray-300">
-                  {instructor.cursos.map((curso, index) => (
-                    <li key={index} className="flex items-center gap-2 text-sm md:text-base">
-                      <span className="text-green-400">•</span>
-                      {curso}
-                    </li>
+          {activeTab === 'calificaciones' && (
+            <div>
+              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <span className="text-yellow-400">⭐</span>
+                Calificaciones de los estudiantes
+              </h3>
+              
+              {loadingCalificaciones ? (
+                <div className="text-center py-12 bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl border border-gray-600">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-sena-green mx-auto mb-4"></div>
+                  <p className="text-gray-300 text-lg">Cargando calificaciones...</p>
+                </div>
+              ) : calificaciones.length === 0 ? (
+                <div className="text-center py-12 bg-gradient-to-br from-gray-800 to-gray-700 rounded-xl border border-gray-600">
+                  <div className="text-6xl mb-4">📝</div>
+                  <p className="text-gray-400 text-lg">
+                    Este {instructor.rol} aún no tiene calificaciones.
+                  </p>
+                  <p className="text-gray-500 text-sm mt-2">
+                    ¡Sé el primero en calificar!
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
+                  {calificaciones.map((calificacion, index) => (
+                    <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-700 p-5 rounded-xl border border-gray-600 shadow-sm hover:shadow-lg transition-shadow duration-200">
+                      <div className="flex justify-between items-start mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="flex">
+                              {renderEstrellas(calificacion.Calificacion)}
+                            </div>
+                            <span className="font-bold text-yellow-400 text-lg">
+                              ({calificacion.Calificacion}/5)
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-blue-400">👨‍🎓</span>
+                            <p className="text-sm text-gray-300 font-medium">
+                              {calificacion.EstudianteNombre} {calificacion.EstudianteApellido}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-gray-500 text-xs">📅</span>
+                          <span className="text-xs text-gray-400">
+                            {formatearFecha(calificacion.FechaCalificacion)}
+                          </span>
+                        </div>
+                      </div>
+                      {calificacion.Comentario && (
+                        <div className="mt-3 p-3 bg-gray-700/50 rounded-lg border-l-4 border-sena-green">
+                          <p className="text-gray-300 text-sm italic leading-relaxed">
+                            💬 "{calificacion.Comentario}"
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   ))}
-                </ul>
-              </div>
-
-              <div className="transform transition-all duration-300 hover:translate-x-2">
-                <h3 className="text-base md:text-lg font-semibold text-green-400 mb-1 md:mb-2 flex items-center gap-2">
-                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  Contacto
-                </h3>
-                <p className="text-gray-300 text-sm md:text-base hover:text-green-400 transition-colors duration-200">{instructor.email}</p>
-              </div>
+                </div>
+              )}
             </div>
-          </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="bg-gradient-to-r from-gray-800 to-gray-700 px-6 py-4 flex justify-end border-t border-gray-600">
+          <button
+            onClick={onClose}
+            className="px-8 py-3 bg-gradient-to-r from-gray-600 to-gray-500 text-white rounded-lg hover:from-gray-500 hover:to-gray-400 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 flex items-center gap-2"
+          >
+            <span>❌</span>
+            Cerrar
+          </button>
         </div>
       </div>
     </div>
