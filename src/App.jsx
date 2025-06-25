@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import Eventos from "./Pages/EventosNoticias/Eventos";
 import Noticias from "./Pages/EventosNoticias/Noticias";
+import EventosNoticias from "./Pages/EventosNoticias/EventosNoticias";
 import FAQ from "./Pages/FAQ/FAQ";
 import VerMasEvento from "./Pages/EventosNoticias/VerMas/VerMasEvento";
 import VerMasNoticia from "./Pages/EventosNoticias/VerMas/VerMasNoticia";
@@ -40,6 +41,7 @@ function App() {
             <Route path="/LoginPage" element={<LoginPage />} />
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/eventos-y-noticias" element={<EventosNoticias />} />
             <Route path="/eventos" element={<Eventos />} />
             <Route path="/noticias" element={<Noticias />} />
             <Route path="/faq" element={<FAQ />} />

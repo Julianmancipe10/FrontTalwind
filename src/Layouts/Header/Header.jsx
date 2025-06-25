@@ -165,7 +165,7 @@ export const Header = () => {
                 )}
 
                 <NavLink 
-                  to="/eventos" 
+                  to="/eventos-y-noticias" 
                   end 
                   className={({isActive}) => 
                     `header-nav-link ${isActive ? activeClassName : inactiveClassName}`
@@ -328,7 +328,7 @@ export const Header = () => {
                 Horarios
               </NavLink>
               <NavLink 
-                to="/eventos" 
+                to="/eventos-y-noticias" 
                 end 
                 className={({isActive}) => 
                   `header-nav-link py-2 ${isActive ? activeClassName : inactiveClassName}`
