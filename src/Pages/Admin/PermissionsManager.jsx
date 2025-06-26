@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usePermissions } from '../../hooks/usePermissions';
 import { PERMISOS, PERMISOS_DESCRIPCION, ROLES } from '../../constants/roles';
+import { buildApiUrl, getAuthHeaders } from '../../services/config';
 import axios from 'axios';
 
 const PermissionsManager = () => {
@@ -45,7 +46,7 @@ const PermissionsManager = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users', {
+      const response = await axios.get(buildApiUrl('/users'), {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -63,7 +64,7 @@ const PermissionsManager = () => {
 
   const fetchUserPermissions = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/permissions/user/${userId}`, {
+      const response = await axios.get(buildApiUrl(`/permissions/user/${userId}`), {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }
@@ -97,7 +98,7 @@ const PermissionsManager = () => {
     setSuccess('');
 
     try {
-      await axios.post('http://localhost:5000/api/permissions/assign', {
+      await axios.post(buildApiUrl('/permissions/assign'), {
         userId: selectedUser,
         permisos: userPermissions,
         fechaLimite

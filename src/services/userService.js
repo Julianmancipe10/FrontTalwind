@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const API_URL = 'https://senaunitybackend-production.up.railway.app/api';
+import { buildApiUrl } from './config';
 
 const getAuthHeaders = () => {
   const token = localStorage.getItem('token');
@@ -14,7 +13,7 @@ export const userService = {
   // Obtener todos los usuarios
   getAllUsers: async () => {
     try {
-      const response = await axios.get(`${API_URL}/users`, {
+      const response = await axios.get(buildApiUrl('/users'), {
         headers: getAuthHeaders()
       });
       return response.data;
@@ -54,7 +53,7 @@ export const userService = {
         throw new Error('Solo se pueden crear usuarios con rol instructor o funcionario');
       }
 
-      const response = await axios.post(`${API_URL}/users`, userData, {
+      const response = await axios.post(buildApiUrl('/users'), userData, {
         headers: getAuthHeaders()
       });
       return response.data;
@@ -66,7 +65,7 @@ export const userService = {
   // Eliminar usuario
   deleteUser: async (userId) => {
     try {
-      const response = await axios.delete(`${API_URL}/users/${userId}`, {
+      const response = await axios.delete(buildApiUrl(`/users/${userId}`), {
         headers: getAuthHeaders()
       });
       return response.data;
@@ -78,7 +77,7 @@ export const userService = {
   // Obtener usuario por ID
   getUserById: async (userId) => {
     try {
-      const response = await axios.get(`${API_URL}/users/${userId}`, {
+      const response = await axios.get(buildApiUrl(`/users/${userId}`), {
         headers: getAuthHeaders()
       });
       return response.data;
@@ -90,7 +89,7 @@ export const userService = {
   // Actualizar usuario
   updateUser: async (userId, userData) => {
     try {
-      const response = await axios.put(`${API_URL}/users/${userId}`, userData, {
+      const response = await axios.put(buildApiUrl(`/users/${userId}`), userData, {
         headers: getAuthHeaders()
       });
       return response.data;

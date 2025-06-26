@@ -4,6 +4,7 @@ import { PERMISOS } from '../../../constants/roles';
 import AccessDenied from '../../../components/AccessDenied/AccessDenied';
 import { Header } from '../../../Layouts/Header/Header';
 import { useNavigate } from 'react-router-dom';
+import { buildApiUrl } from '../../../services/config';
 
 const CrearNoticia = () => {
   // TODOS los hooks deben ir PRIMERO
@@ -121,7 +122,7 @@ const CrearNoticia = () => {
         formDataToSend.append('imagenes', img.file);
       });
 
-      const response = await fetch('http://localhost:5000/api/publicaciones/noticias', {
+      const response = await fetch(buildApiUrl('/publicaciones/noticias'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

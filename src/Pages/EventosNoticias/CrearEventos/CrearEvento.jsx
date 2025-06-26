@@ -4,6 +4,7 @@ import { PERMISOS } from '../../../constants/roles';
 import AccessDenied from '../../../components/AccessDenied/AccessDenied';
 import { Header } from '../../../Layouts/Header/Header';
 import { useNavigate } from 'react-router-dom';
+import { buildApiUrl } from '../../../services/config';
 
 const CrearEvento = () => {
   // TODOS los hooks deben ir PRIMERO
@@ -102,7 +103,7 @@ const CrearEvento = () => {
       formDataToSend.append('enlace', formData.enlace);
       formDataToSend.append('imagen', formData.imagen); // Archivo real
 
-      const response = await fetch('http://localhost:5000/api/publicaciones/eventos', {
+      const response = await fetch(buildApiUrl('/publicaciones/eventos'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

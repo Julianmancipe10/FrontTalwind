@@ -21,6 +21,7 @@ import CrearEvento from "./Pages/EventosNoticias/CrearEventos/CrearEvento";
 import CrearNoticia from "./Pages/EventosNoticias/CrearNoticias/CrearNoticia";
 import VerMasCarrera from "./Pages/Carreras/VerMasCarrera";
 import Footer from "./components/Footer";
+import useScrollToTop from "./hooks/useScrollToTop";
 
 // Componente para verificar si el usuario es administrador
 const AdminOnlyRoute = ({ children }) => {
@@ -31,11 +32,13 @@ const AdminOnlyRoute = ({ children }) => {
   return children;
 };
 
-function App() {
+// Componente interno para usar el hook de scroll
+const AppContent = () => {
+  useScrollToTop(); // Hook para scroll to top automático
+  
   return (
-    <Router>
-      <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white">
-        <div className="flex-grow">
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+      <div className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/LoginPage" element={<LoginPage />} />
@@ -83,6 +86,13 @@ function App() {
         </div>
         <Footer />
       </div>
+    );
+};
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }

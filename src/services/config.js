@@ -1,14 +1,15 @@
 // Configuración centralizada de la aplicación
 const getBaseUrl = () => {
-  // Detectar entorno basándose en la URL actual
+  // Detectar entorno basándose en la URL actual y variables de entorno
+  const isDev = import.meta.env.DEV;
   const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
   
-  if (isLocal) {
-    // En desarrollo local, usar proxy de Vite
+  if (isDev || isLocal) {
+    // En desarrollo local, usar proxy de Vite que redirige a localhost:5000
     return '/api';
   }
   
-  // En producción (Vercel u otro), usar URL completa
+  // En producción, usar URL completa
   return 'https://senaunitybackend-production.up.railway.app/api';
 };
 
