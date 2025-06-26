@@ -1,16 +1,58 @@
-const API_URL = 'https://senaunitybackend-production.up.railway.app/api/publicaciones';
+// Configuración de URL que funciona tanto en desarrollo como en producción
+const getApiUrl = () => {
+  // En desarrollo, usar proxy de Vite
+  if (import.meta.env.DEV) {
+    return '/api/publicaciones';
+  }
+  // En producción, usar URL completa
+  return 'https://senaunitybackend-production.up.railway.app/api/publicaciones';
+};
+
+const API_URL = getApiUrl();
+
+// Helper para obtener headers de autorización
+const getAuthHeaders = () => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.warn('No hay token de autenticación');
+    return {};
+  }
+  return {
+    'Authorization': `Bearer ${token}`
+  };
+};
+
+// Helper para manejar respuestas de error
+const handleErrorResponse = async (response) => {
+  if (!response.ok) {
+    let errorMessage = `Error ${response.status}: ${response.statusText}`;
+    
+    try {
+      const errorData = await response.json();
+      errorMessage = errorData.message || errorMessage;
+    } catch (e) {
+      // Si no se puede parsear el JSON, usar el mensaje por defecto
+    }
+    
+    if (response.status === 401) {
+      errorMessage = 'No autorizado. Por favor, inicia sesión nuevamente.';
+      // Limpiar token inválido
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+    } else if (response.status === 403) {
+      errorMessage = 'No tienes permisos para realizar esta acción.';
+    }
+    
+    throw new Error(errorMessage);
+  }
+};
 
 // Obtener eventos
 export const getEventos = async () => {
   try {
     const response = await fetch(`${API_URL}/eventos`);
-    
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-    
-    const eventos = await response.json();
-    return eventos;
+    await handleErrorResponse(response);
+    return await response.json();
   } catch (error) {
     console.error('Error al obtener eventos:', error);
     throw error;
@@ -21,13 +63,8 @@ export const getEventos = async () => {
 export const getNoticias = async () => {
   try {
     const response = await fetch(`${API_URL}/noticias`);
-    
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-    
-    const noticias = await response.json();
-    return noticias;
+    await handleErrorResponse(response);
+    return await response.json();
   } catch (error) {
     console.error('Error al obtener noticias:', error);
     throw error;
@@ -38,13 +75,8 @@ export const getNoticias = async () => {
 export const getCarreras = async () => {
   try {
     const response = await fetch(`${API_URL}/carreras`);
-    
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-    
-    const carreras = await response.json();
-    return carreras;
+    await handleErrorResponse(response);
+    return await response.json();
   } catch (error) {
     console.error('Error al obtener carreras:', error);
     throw error;
@@ -55,13 +87,8 @@ export const getCarreras = async () => {
 export const getPublicacionById = async (id) => {
   try {
     const response = await fetch(`${API_URL}/${id}`);
-    
-    if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
-    }
-    
-    const publicacion = await response.json();
-    return publicacion;
+    await handleErrorResponse(response);
+    return await response.json();
   } catch (error) {
     console.error('Error al obtener publicación:', error);
     throw error;
@@ -71,29 +98,39 @@ export const getPublicacionById = async (id) => {
 // Crear evento
 export const createEvento = async (eventoData, imagen) => {
   try {
+    console.log('🚀 Creando evento...', { eventoData, hasImage: !!imagen });
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No estás autenticado. Por favor, inicia sesión.');
+    }
+
     const formData = new FormData();
     formData.append('titulo', eventoData.titulo);
     formData.append('fecha', eventoData.fecha);
     formData.append('descripcion', eventoData.descripcion);
-    formData.append('enlace', eventoData.enlace);
-    formData.append('imagen', imagen);
+    if (eventoData.enlace) {
+      formData.append('enlace', eventoData.enlace);
+    }
+    if (imagen) {
+      formData.append('imagen', imagen);
+    }
+
+    console.log('📤 Enviando evento al backend...', API_URL);
 
     const response = await fetch(`${API_URL}/eventos`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
+      headers: getAuthHeaders(),
       body: formData
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Error al crear evento');
-    }
-
-    return await response.json();
+    await handleErrorResponse(response);
+    const result = await response.json();
+    
+    console.log('✅ Evento creado exitosamente:', result);
+    return result;
   } catch (error) {
-    console.error('Error al crear evento:', error);
+    console.error('❌ Error al crear evento:', error);
     throw error;
   }
 };
@@ -101,29 +138,32 @@ export const createEvento = async (eventoData, imagen) => {
 // Crear noticia
 export const createNoticia = async (noticiaData, imagenes) => {
   try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No estás autenticado. Por favor, inicia sesión.');
+    }
+
     const formData = new FormData();
     formData.append('titulo', noticiaData.titulo);
     formData.append('fecha', noticiaData.fecha);
     formData.append('descripcion', noticiaData.descripcion);
-    formData.append('enlace', noticiaData.enlace);
+    if (noticiaData.enlace) {
+      formData.append('enlace', noticiaData.enlace);
+    }
     
-    imagenes.forEach(imagen => {
-      formData.append('imagenes', imagen);
-    });
+    if (imagenes && imagenes.length > 0) {
+      imagenes.forEach(imagen => {
+        formData.append('imagenes', imagen);
+      });
+    }
 
     const response = await fetch(`${API_URL}/noticias`, {
       method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
-      },
+      headers: getAuthHeaders(),
       body: formData
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Error al crear noticia');
-    }
-
+    await handleErrorResponse(response);
     return await response.json();
   } catch (error) {
     console.error('Error al crear noticia:', error);
@@ -134,20 +174,21 @@ export const createNoticia = async (noticiaData, imagenes) => {
 // Crear carrera
 export const createCarrera = async (carreraData) => {
   try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No estás autenticado. Por favor, inicia sesión.');
+    }
+
     const response = await fetch(`${API_URL}/carreras`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('token')}`
+        ...getAuthHeaders()
       },
       body: JSON.stringify(carreraData)
     });
 
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || 'Error al crear carrera');
-    }
-
+    await handleErrorResponse(response);
     return await response.json();
   } catch (error) {
     console.error('Error al crear carrera:', error);

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { buildApiUrl } from './config.js';
 
 const API_URL = 'https://senaunitybackend-production.up.railway.app/api';
 
@@ -70,7 +71,9 @@ export const sendMessage = async (message) => {
       throw new Error('El mensaje no puede estar vacío');
     }
 
-    const response = await fetch(`${API_URL}/faq/chat`, {
+    console.log('🤖 Enviando mensaje a FAQ IA...', { message: message.substring(0, 50) + '...' });
+
+    const response = await fetch(buildApiUrl('/faq/chat'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,6 +90,10 @@ export const sendMessage = async (message) => {
         throw new Error('Servicio de IA temporalmente no disponible. Por favor, intenta más tarde.');
       }
       
+      if (response.status === 500) {
+        throw new Error('Error interno del servidor. El servicio de IA puede estar desconfigurado.');
+      }
+      
       const errorData = await response.json().catch(() => ({}));
       throw new Error(errorData.message || `Error del servidor: ${response.status}`);
     }
@@ -97,9 +104,10 @@ export const sendMessage = async (message) => {
       throw new Error('Respuesta inválida del servidor');
     }
 
+    console.log('✅ Respuesta recibida de FAQ IA');
     return data;
   } catch (error) {
-    console.error('Error al enviar mensaje al FAQ:', error);
+    console.error('❌ Error al enviar mensaje al FAQ:', error);
     
     // Manejo específico de errores de red
     if (error.name === 'TypeError' && error.message.includes('fetch')) {
@@ -112,7 +120,7 @@ export const sendMessage = async (message) => {
 
 export const getFAQHistory = async () => {
   try {
-    const response = await fetch(`${API_URL}/faq/history`, {
+    const response = await fetch(buildApiUrl('/faq/history'), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -130,5 +138,34 @@ export const getFAQHistory = async () => {
   } catch (error) {
     console.error('Error al obtener historial FAQ:', error);
     return []; // Retornar array vacío en caso de error
+  }
+};
+
+export const sendMessageCached = async (message) => {
+  const cacheKey = message.trim().toLowerCase();
+  
+  // Verificar cache primero
+  if (responseCache.has(cacheKey)) {
+    console.log('📦 Respuesta obtenida del cache');
+    return responseCache.get(cacheKey);
+  }
+  
+  try {
+    const response = await sendMessage(message);
+    
+    // Guardar en cache si la respuesta es exitosa
+    if (response && response.response) {
+      responseCache.set(cacheKey, response);
+      
+      // Limpiar cache si es muy grande (mantener solo 50 respuestas)
+      if (responseCache.size > 50) {
+        const firstKey = responseCache.keys().next().value;
+        responseCache.delete(firstKey);
+      }
+    }
+    
+    return response;
+  } catch (error) {
+    throw error;
   }
 };

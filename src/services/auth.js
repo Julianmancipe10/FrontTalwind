@@ -1,4 +1,4 @@
-const API_URL = 'https://senaunitybackend-production.up.railway.app/api';
+import { buildApiUrl, getAuthHeaders } from './config.js';
 
 // Helper para requests con timeout y retry
 const fetchWithTimeout = async (url, options = {}, timeout = 15000, retries = 2) => {
@@ -16,7 +16,7 @@ const fetchWithTimeout = async (url, options = {}, timeout = 15000, retries = 2)
         clearTimeout(timeoutId);
         
         if (error.name === 'AbortError' && retries > 0) {
-            console.log(`Timeout, reintentando... ${retries} intentos restantes`);
+            console.log(`⏰ Timeout, reintentando... ${retries} intentos restantes`);
             await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1s
             return fetchWithTimeout(url, options, timeout, retries - 1);
         }
@@ -27,7 +27,9 @@ const fetchWithTimeout = async (url, options = {}, timeout = 15000, retries = 2)
 
 export const loginUser = async (credentials) => {
     try {
-        const response = await fetchWithTimeout(`${API_URL}/auth/login`, {
+        console.log('🔐 Intentando login...', { email: credentials.correo });
+        
+        const response = await fetchWithTimeout(buildApiUrl('/auth/login'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,9 +57,10 @@ export const loginUser = async (credentials) => {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
 
+        console.log('✅ Login exitoso:', { user: data.user.nombre, rol: data.user.rol });
         return data;
     } catch (error) {
-        console.error('Error al iniciar sesión:', error);
+        console.error('❌ Error al iniciar sesión:', error);
         
         // Manejo de errores de red
         if (error.name === 'TypeError' && error.message.includes('fetch')) {
@@ -102,7 +105,7 @@ export const registerUser = async (userData) => {
             throw new Error('Rol no válido');
         }
 
-        const response = await fetch(`${API_URL}/auth/register`, {
+        const response = await fetchWithTimeout(buildApiUrl('/auth/register'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -132,6 +135,7 @@ export const registerUser = async (userData) => {
 export const logoutUser = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    console.log('👋 Usuario desconectado');
 };
 
 export const getCurrentUser = () => {
@@ -151,18 +155,17 @@ export const getCurrentUser = () => {
 };
 
 export const getAuthHeader = () => {
-    const token = localStorage.getItem('token');
-    return token ? { Authorization: `Bearer ${token}` } : {};
+    return getAuthHeaders();
 };
 
-// Nuevas funciones para gestión administrativa
+// Funciones para gestión administrativa
 export const getPendingValidations = async () => {
     try {
-        const response = await fetch(`${API_URL}/auth/admin/pending-validations`, {
+        const response = await fetchWithTimeout(buildApiUrl('/auth/admin/pending-validations'), {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                ...getAuthHeader(),
+                ...getAuthHeaders(),
             },
         });
         
@@ -181,11 +184,11 @@ export const getPendingValidations = async () => {
 
 export const approveValidation = async (solicitudId, observaciones = '') => {
     try {
-        const response = await fetch(`${API_URL}/auth/admin/approve-validation/${solicitudId}`, {
+        const response = await fetchWithTimeout(buildApiUrl(`/auth/admin/approve-validation/${solicitudId}`), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                ...getAuthHeader(),
+                ...getAuthHeaders(),
             },
             body: JSON.stringify({ observaciones }),
         });
@@ -209,11 +212,11 @@ export const rejectValidation = async (solicitudId, observaciones) => {
             throw new Error('Las observaciones son requeridas para rechazar una solicitud');
         }
 
-        const response = await fetch(`${API_URL}/auth/admin/reject-validation/${solicitudId}`, {
+        const response = await fetchWithTimeout(buildApiUrl(`/auth/admin/reject-validation/${solicitudId}`), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                ...getAuthHeader(),
+                ...getAuthHeaders(),
             },
             body: JSON.stringify({ observaciones }),
         });
