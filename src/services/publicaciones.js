@@ -1,18 +1,4 @@
-// Configuración de URL que funciona tanto en desarrollo como en producción
-const getApiUrl = () => {
-  // Detectar entorno basándose en la URL actual
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-  
-  if (isLocal) {
-    // En desarrollo local, usar proxy de Vite
-    return '/api/publicaciones';
-  }
-  
-  // En producción (Vercel u otro), usar URL completa
-  return 'https://senaunitybackend-production.up.railway.app/api/publicaciones';
-};
-
-const API_URL = getApiUrl();
+import { buildApiUrl } from './config';
 
 // Helper para obtener headers de autorización
 const getAuthHeaders = () => {
@@ -54,7 +40,7 @@ const handleErrorResponse = async (response) => {
 // Obtener eventos
 export const getEventos = async () => {
   try {
-    const response = await fetch(`${API_URL}/eventos`);
+    const response = await fetch(buildApiUrl('/publicaciones/eventos'));
     await handleErrorResponse(response);
     return await response.json();
   } catch (error) {
@@ -66,7 +52,7 @@ export const getEventos = async () => {
 // Obtener noticias
 export const getNoticias = async () => {
   try {
-    const response = await fetch(`${API_URL}/noticias`);
+    const response = await fetch(buildApiUrl('/publicaciones/noticias'));
     await handleErrorResponse(response);
     return await response.json();
   } catch (error) {
@@ -78,7 +64,7 @@ export const getNoticias = async () => {
 // Obtener carreras
 export const getCarreras = async () => {
   try {
-    const response = await fetch(`${API_URL}/carreras`);
+    const response = await fetch(buildApiUrl('/publicaciones/carreras'));
     await handleErrorResponse(response);
     return await response.json();
   } catch (error) {
@@ -90,7 +76,7 @@ export const getCarreras = async () => {
 // Obtener publicación por ID
 export const getPublicacionById = async (id) => {
   try {
-    const response = await fetch(`${API_URL}/${id}`);
+    const response = await fetch(buildApiUrl(`/publicaciones/${id}`));
     await handleErrorResponse(response);
     return await response.json();
   } catch (error) {
@@ -120,9 +106,9 @@ export const createEvento = async (eventoData, imagen) => {
       formData.append('imagen', imagen);
     }
 
-    console.log('📤 Enviando evento al backend...', API_URL);
+    console.log('📤 Enviando evento al backend...', buildApiUrl('/publicaciones/eventos'));
 
-    const response = await fetch(`${API_URL}/eventos`, {
+    const response = await fetch(buildApiUrl('/publicaciones/eventos'), {
       method: 'POST',
       headers: getAuthHeaders(),
       body: formData
@@ -161,7 +147,7 @@ export const createNoticia = async (noticiaData, imagenes) => {
       });
     }
 
-    const response = await fetch(`${API_URL}/noticias`, {
+    const response = await fetch(buildApiUrl('/publicaciones/noticias'), {
       method: 'POST',
       headers: getAuthHeaders(),
       body: formData
@@ -183,7 +169,7 @@ export const createCarrera = async (carreraData) => {
       throw new Error('No estás autenticado. Por favor, inicia sesión.');
     }
 
-    const response = await fetch(`${API_URL}/carreras`, {
+    const response = await fetch(buildApiUrl('/publicaciones/carreras'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -196,6 +182,49 @@ export const createCarrera = async (carreraData) => {
     return await response.json();
   } catch (error) {
     console.error('Error al crear carrera:', error);
+    throw error;
+  }
+};
+
+// Actualizar publicación
+export const updatePublicacion = async (id, formData) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No estás autenticado. Por favor, inicia sesión.');
+    }
+
+    const response = await fetch(buildApiUrl(`/publicaciones/${id}`), {
+      method: 'PUT',
+      headers: getAuthHeaders(),
+      body: formData
+    });
+
+    await handleErrorResponse(response);
+    return await response.json();
+  } catch (error) {
+    console.error('Error al actualizar publicación:', error);
+    throw error;
+  }
+};
+
+// Eliminar publicación
+export const deletePublicacion = async (id) => {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No estás autenticado. Por favor, inicia sesión.');
+    }
+
+    const response = await fetch(buildApiUrl(`/publicaciones/${id}`), {
+      method: 'DELETE',
+      headers: getAuthHeaders()
+    });
+
+    await handleErrorResponse(response);
+    return await response.json();
+  } catch (error) {
+    console.error('Error al eliminar publicación:', error);
     throw error;
   }
 }; 

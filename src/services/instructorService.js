@@ -163,11 +163,14 @@ export const getInstructorById = async (id) => {
 // Obtener perfil del instructor autenticado
 export const getMiPerfil = async () => {
   try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${API_BASE}/mi/perfil`, {
+    if (!isAuthenticated()) {
+      throw new Error('No estás autenticado. Por favor, inicia sesión.');
+    }
+
+    const response = await fetch(buildApiUrl('/instructores/mi/perfil'), {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
       }
     });
     
@@ -185,12 +188,15 @@ export const getMiPerfil = async () => {
 // Actualizar perfil del instructor autenticado
 export const updateMiPerfil = async (perfilData) => {
   try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${API_BASE}/mi/perfil`, {
+    if (!isAuthenticated()) {
+      throw new Error('No estás autenticado. Por favor, inicia sesión.');
+    }
+
+    const response = await fetch(buildApiUrl('/instructores/mi/perfil'), {
       method: 'PUT',
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
       },
       body: JSON.stringify(perfilData)
     });
@@ -210,7 +216,7 @@ export const updateMiPerfil = async (perfilData) => {
 // Obtener calificaciones de un instructor
 export const getCalificacionesInstructor = async (instructorId) => {
   try {
-    const response = await fetch(`${API_BASE}/${instructorId}/calificaciones`);
+    const response = await fetch(buildApiUrl(`/instructores/${instructorId}/calificaciones`));
     if (!response.ok) {
       throw new Error('Error al obtener calificaciones');
     }
@@ -225,11 +231,14 @@ export const getCalificacionesInstructor = async (instructorId) => {
 // Obtener mis calificaciones (instructor autenticado)
 export const getMisCalificaciones = async () => {
   try {
-    const token = localStorage.getItem('token');
-    const response = await fetch(`${API_BASE}/mi/calificaciones`, {
+    if (!isAuthenticated()) {
+      throw new Error('No estás autenticado. Por favor, inicia sesión.');
+    }
+
+    const response = await fetch(buildApiUrl('/instructores/mi/calificaciones'), {
       headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
       }
     });
     

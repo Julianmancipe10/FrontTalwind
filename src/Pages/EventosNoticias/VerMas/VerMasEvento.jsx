@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Header } from '../../../Layouts/Header/Header';
-import { getPublicacionById } from '../../../services/publicaciones';
+import { getPublicacionById, updatePublicacion } from '../../../services/publicaciones';
 import PermissionWrapper from "../../../components/PermissionWrapper/PermissionWrapper";
 import { PERMISOS } from "../../../constants/roles";
+import { API_CONFIG } from '../../../services/config';
 import slider1 from '../../../assets/images/optimized/optimized_slider1.jpg';
 
 const VerMasEvento = () => {
@@ -23,12 +24,19 @@ const VerMasEvento = () => {
         const data = await getPublicacionById(id);
         
         if (data) {
+          // Construir URL de imagen usando la configuración base
+          const imageUrl = data.ImagenSlider 
+            ? (API_CONFIG.BASE_URL.startsWith('/') 
+                ? `${window.location.origin}${data.ImagenSlider}` 
+                : `${API_CONFIG.BASE_URL.replace('/api', '')}${data.ImagenSlider}`)
+            : slider1;
+            
           setEvento({
             id: data.ID_Evento,
             titulo: data.Nombre,
             fecha: data.Fecha,
             enlace: data.URL_Enlace,
-            imagen: data.ImagenSlider ? `http://localhost:5000${data.ImagenSlider}` : slider1,
+            imagen: imageUrl,
             descripcion: data.Descripción,
             ubicacion: data.Ubicacion,
             creador: `${data.CreadorNombre || ''} ${data.CreadorApellido || ''}`.trim(),
@@ -67,75 +75,40 @@ const VerMasEvento = () => {
 
   const handleSaveEdit = async () => {
     try {
+      // Preparar datos para actualización
+      const formData = new FormData();
+      formData.append('Nombre', editForm.titulo);
+      formData.append('Descripción', editForm.descripcion);
+      formData.append('URL_Enlace', editForm.enlace);
+      formData.append('Ubicacion', editForm.ubicacion);
+      
       if (newImage) {
-        // Si hay nueva imagen, usar FormData
-        const formData = new FormData();
-        formData.append('Nombre', editForm.titulo);
-        formData.append('Descripción', editForm.descripcion);
-        formData.append('URL_Enlace', editForm.enlace);
-        formData.append('Ubicacion', editForm.ubicacion);
         formData.append('imagen', newImage);
-
-        const response = await fetch(`http://localhost:5000/api/publicaciones/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          },
-          body: formData
-        });
-
-        if (response.ok) {
-          setEvento({
-            ...evento,
-            titulo: editForm.titulo,
-            descripcion: editForm.descripcion,
-            enlace: editForm.enlace,
-            ubicacion: editForm.ubicacion,
-            imagen: newImagePreview
-          });
-          setIsEditing(false);
-          setNewImage(null);
-          if (newImagePreview) {
-            URL.revokeObjectURL(newImagePreview);
-          }
-          setNewImagePreview(null);
-          alert('✅ Evento actualizado exitosamente');
-        } else {
-          alert('❌ Error al actualizar el evento');
-        }
-      } else {
-        // Sin nueva imagen, usar JSON
-        const response = await fetch(`http://localhost:5000/api/publicaciones/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          },
-          body: JSON.stringify({
-            Nombre: editForm.titulo,
-            Descripción: editForm.descripcion,
-            URL_Enlace: editForm.enlace,
-            Ubicacion: editForm.ubicacion
-          })
-        });
-
-        if (response.ok) {
-          setEvento({
-            ...evento,
-            titulo: editForm.titulo,
-            descripcion: editForm.descripcion,
-            enlace: editForm.enlace,
-            ubicacion: editForm.ubicacion
-          });
-          setIsEditing(false);
-          alert('✅ Evento actualizado exitosamente');
-        } else {
-          alert('❌ Error al actualizar el evento');
-        }
       }
+
+      // Usar el servicio centralizado
+      await updatePublicacion(id, formData);
+
+      // Actualizar estado local
+      setEvento({
+        ...evento,
+        titulo: editForm.titulo,
+        descripcion: editForm.descripcion,
+        enlace: editForm.enlace,
+        ubicacion: editForm.ubicacion,
+        imagen: newImagePreview || evento.imagen
+      });
+      
+      setIsEditing(false);
+      setNewImage(null);
+      if (newImagePreview) {
+        URL.revokeObjectURL(newImagePreview);
+      }
+      setNewImagePreview(null);
+      alert('✅ Evento actualizado exitosamente');
     } catch (error) {
       console.error('Error al actualizar evento:', error);
-      alert('❌ Error de conexión');
+      alert(`❌ Error al actualizar evento: ${error.message}`);
     }
   };
 
