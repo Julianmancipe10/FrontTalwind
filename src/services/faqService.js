@@ -1,8 +1,6 @@
 import axios from "axios";
 import { buildApiUrl } from './config.js';
 
-const API_URL = 'https://senaunitybackend-production.up.railway.app/api';
-
 // Cache simple para respuestas frecuentes
 const responseCache = new Map();
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hora
@@ -36,7 +34,7 @@ export const preguntarFAQ = async (question, context = "") => {
       return cachedAnswer;
     }
 
-    const res = await axios.post(API_URL, { 
+    const res = await axios.post(buildApiUrl('/faq'), { 
       question,
       context,
       timestamp: new Date().toISOString()
