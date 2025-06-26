@@ -5,10 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --mode production",
+    "build:preview": "vite build && vite preview",
     "lint": "eslint .",
     "preview": "vite preview",
-    "optimize-images": "node optimize-images.js"
+    "optimize-images": "node optimize-images.js",
+    "check-deps": "npm outdated",
+    "clean": "rm -rf dist node_modules/.vite",
+    "analyze": "vite build --mode analyze"
   },
   "dependencies": {
     "aos": "^2.3.4",

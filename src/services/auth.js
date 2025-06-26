@@ -1,8 +1,33 @@
 const API_URL = 'https://senaunitybackend-production.up.railway.app/api';
 
+// Helper para requests con timeout y retry
+const fetchWithTimeout = async (url, options = {}, timeout = 15000, retries = 2) => {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    
+    try {
+        const response = await fetch(url, {
+            ...options,
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        return response;
+    } catch (error) {
+        clearTimeout(timeoutId);
+        
+        if (error.name === 'AbortError' && retries > 0) {
+            console.log(`Timeout, reintentando... ${retries} intentos restantes`);
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Esperar 1s
+            return fetchWithTimeout(url, options, timeout, retries - 1);
+        }
+        
+        throw error;
+    }
+};
+
 export const loginUser = async (credentials) => {
     try {
-        const response = await fetch(`${API_URL}/auth/login`, {
+        const response = await fetchWithTimeout(`${API_URL}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -13,6 +38,16 @@ export const loginUser = async (credentials) => {
         const data = await response.json();
         
         if (!response.ok) {
+            // Manejo específico de errores de autenticación
+            if (response.status === 401) {
+                throw new Error('Credenciales incorrectas. Verifica tu correo y contraseña.');
+            }
+            if (response.status === 429) {
+                throw new Error('Demasiados intentos de inicio de sesión. Espera 15 minutos.');
+            }
+            if (response.status >= 500) {
+                throw new Error('Error del servidor. Por favor, intenta más tarde.');
+            }
             throw new Error(data.message || 'Error al iniciar sesión');
         }
 
@@ -23,6 +58,16 @@ export const loginUser = async (credentials) => {
         return data;
     } catch (error) {
         console.error('Error al iniciar sesión:', error);
+        
+        // Manejo de errores de red
+        if (error.name === 'TypeError' && error.message.includes('fetch')) {
+            throw new Error('Error de conexión. Verifica tu conexión a internet.');
+        }
+        
+        if (error.name === 'AbortError') {
+            throw new Error('La solicitud tardó demasiado. Verifica tu conexión e intenta nuevamente.');
+        }
+        
         throw new Error(error.message || 'Error al iniciar sesión');
     }
 };
