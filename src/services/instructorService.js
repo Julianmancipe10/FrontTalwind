@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:5000/api/instructores';
+const API_BASE = 'https://senaunitybackend-production.up.railway.app/api/instructores';
 
 // Obtener todos los instructores y funcionarios
 export const getInstructoresYFuncionarios = async () => {

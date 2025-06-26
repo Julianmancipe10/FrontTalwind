@@ -1,6 +1,6 @@
 // Configuración centralizada de la aplicación
 export const API_CONFIG = {
-  BASE_URL: 'http://localhost:3000/api',
+  BASE_URL: 'https://senaunitybackend-production.up.railway.app/api',
   TIMEOUT: 10000,
   ENDPOINTS: {
     AUTH: {

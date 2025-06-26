@@ -9,7 +9,7 @@ export default defineConfig({
     strictPort: true, // Forzar el uso de este puerto
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://senaunitybackend-production.up.railway.app',
         changeOrigin: true,
         secure: false
       }

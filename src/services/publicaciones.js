@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5000/api/publicaciones';
+const API_URL = 'https://senaunitybackend-production.up.railway.app/api/publicaciones';
 
 // Obtener eventos
 export const getEventos = async () => {

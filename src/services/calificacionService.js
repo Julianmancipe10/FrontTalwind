@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:5000/api/instructores/calificaciones';
+const API_BASE = 'https://senaunitybackend-production.up.railway.app/api/instructores/calificaciones';
 
 // Crear una nueva calificación
 export const crearCalificacion = async (calificacionData) => {
