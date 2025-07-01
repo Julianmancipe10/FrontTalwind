@@ -109,6 +109,11 @@ const InstrucFuncionarios = () => {
   // Obtener imagen por defecto o la foto del instructor
   const getImagenInstructor = (instructor) => {
     if (instructor.foto) {
+      // Si la URL ya es completa, úsala tal cual
+      if (instructor.foto.startsWith('http')) {
+        return instructor.foto;
+      }
+      // Si es una ruta local, anteponer el dominio
       return `http://localhost:5000${instructor.foto}`;
     }
     // Imagen por defecto basada en el género sugerido por el nombre
