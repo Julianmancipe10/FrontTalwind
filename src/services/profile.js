@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const API_URL = 'https://senaunitybackend-production.up.railway.app/api';
+import { API_BASE_URL, getAuthHeaders, getAuthHeadersFormData } from './config.js';
 
 export const updateUserProfile = async (formData) => {
   try {
@@ -9,16 +8,13 @@ export const updateUserProfile = async (formData) => {
       throw new Error('No hay token de autenticación');
     }
 
-    console.log('🔍 profile.js enviando a:', `${API_URL}/users/profile`);
+    console.log('🔍 profile.js enviando a:', `${API_BASE_URL}/users/profile`);
     console.log('🔑 Token presente:', !!token);
     console.log('🔑 Token empieza con:', token ? token.substring(0, 20) + '...' : 'No token');
     console.log('📦 Datos enviados:', formData);
     
-    const response = await axios.put(`${API_URL}/users/profile`, formData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data'
-      }
+    const response = await axios.put(`${API_BASE_URL}/users/profile`, formData, {
+      headers: getAuthHeadersFormData()
     });
 
     return response.data;
@@ -26,13 +22,25 @@ export const updateUserProfile = async (formData) => {
     if (error.response) {
       console.log('❌ Error response:', error.response.status, error.response.data);
       
-      // Si el token expiró, limpiar localStorage y redirigir al login
-      if (error.response.status === 403 || error.response.status === 401) {
-        console.log('🔑 Token expirado, limpiando localStorage...');
+      // Solo limpiar localStorage si es un error de autenticación definitivo
+      if (error.response.status === 401) {
+        console.log('🔑 Token no válido, limpiando localStorage...');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/LoginPage';
         return;
+      }
+      
+      // Para error 403, verificar si es por permisos o token expirado
+      if (error.response.status === 403) {
+        console.log('🔒 Error 403 - Verificando si es token expirado o problema de permisos');
+        // Solo redirigir si el mensaje indica token expirado
+        if (error.response.data.message && error.response.data.message.includes('Token')) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = '/LoginPage';
+          return;
+        }
       }
       
       // Para error 400, mostrar detalles específicos
@@ -55,15 +63,12 @@ export const updateUserProfileJSON = async (userData) => {
       throw new Error('No hay token de autenticación');
     }
 
-    console.log('🔍 profile.js JSON enviando a:', `${API_URL}/users/profile`);
+    console.log('🔍 profile.js JSON enviando a:', `${API_BASE_URL}/users/profile`);
     console.log('🔑 Token presente:', !!token);
     console.log('📦 Datos JSON enviados:', userData);
     
-    const response = await axios.put(`${API_URL}/users/profile`, userData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+    const response = await axios.put(`${API_BASE_URL}/users/profile`, userData, {
+      headers: getAuthHeaders()
     });
 
     return response.data;
@@ -71,13 +76,25 @@ export const updateUserProfileJSON = async (userData) => {
     if (error.response) {
       console.log('❌ Error response:', error.response.status, error.response.data);
       
-      // Si el token expiró, limpiar localStorage y redirigir al login
-      if (error.response.status === 403 || error.response.status === 401) {
-        console.log('🔑 Token expirado, limpiando localStorage...');
+      // Solo limpiar localStorage si es un error de autenticación definitivo
+      if (error.response.status === 401) {
+        console.log('🔑 Token no válido, limpiando localStorage...');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/LoginPage';
         return;
+      }
+      
+      // Para error 403, verificar si es por permisos o token expirado
+      if (error.response.status === 403) {
+        console.log('🔒 Error 403 - Verificando si es token expirado o problema de permisos');
+        // Solo redirigir si el mensaje indica token expirado
+        if (error.response.data.message && error.response.data.message.includes('Token')) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          window.location.href = '/LoginPage';
+          return;
+        }
       }
       
       // Para error 400, mostrar detalles específicos

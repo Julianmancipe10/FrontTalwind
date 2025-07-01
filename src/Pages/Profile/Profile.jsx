@@ -4,7 +4,7 @@ import { getCurrentUser } from '../../services/auth';
 import { updateUserProfile, updateUserProfileJSON } from '../../services/profile';
 import defaultProfileImage from '../../assets/images/default-profile.svg';
 import { Header } from '../../Layouts/Header/Header';
-import { getImageUrl } from '../../services/config';
+import { getImageUrl, API_BASE_URL, getAuthHeaders } from '../../services/config';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -34,10 +34,8 @@ const Profile = () => {
         
         // Cargar datos frescos del servidor
         try {
-          const response = await fetch('http://localhost:5000/api/users/profile', {
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
+          const response = await fetch(`${API_BASE_URL}/users/profile`, {
+            headers: getAuthHeaders()
           });
 
           if (response.ok) {

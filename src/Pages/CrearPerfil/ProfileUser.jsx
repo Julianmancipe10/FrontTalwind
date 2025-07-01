@@ -3,6 +3,7 @@ import { Header } from '../../Layouts/Header/Header';
 import { useNavigate } from 'react-router-dom';
 import { getAuthHeader, getCurrentUser } from '../../services/auth';
 import { updateUserProfile, updateUserProfileJSON } from '../../services/profile';
+import { API_BASE_URL, getAuthHeaders, getImageUrl } from '../../services/config';
 
 const ProfileUser = () => {
   const navigate = useNavigate();
@@ -28,10 +29,8 @@ const ProfileUser = () => {
     // Cargar datos del perfil si existen
     const fetchProfile = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/users/profile', {
-          headers: {
-            ...getAuthHeader()
-          }
+        const response = await fetch(`${API_BASE_URL}/users/profile`, {
+          headers: getAuthHeaders()
         });
 
         if (response.ok) {
@@ -40,7 +39,7 @@ const ProfileUser = () => {
             nombre: data.nombre || "",
             apellido: data.apellido || "",
             correo: data.correo || "",
-            avatar_url: data.foto ? `http://localhost:5000${data.foto}` : null
+            avatar_url: data.foto ? getImageUrl(data.foto) : null
           });
         }
       } catch (error) {
@@ -91,7 +90,7 @@ const ProfileUser = () => {
     setLoading(true);
 
     try {
-      console.log('🔍 Enviando solicitud a: http://localhost:5000/api/users/profile');
+      console.log('🔍 Enviando solicitud a:', `${API_BASE_URL}/users/profile`);
       
       let updatedUser;
 
@@ -130,7 +129,7 @@ const ProfileUser = () => {
       if (updatedUser.user?.foto) {
         setFormData(prev => ({
           ...prev,
-          avatar_url: `http://localhost:5000${updatedUser.user.foto}`
+          avatar_url: getImageUrl(updatedUser.user.foto)
         }));
       }
       

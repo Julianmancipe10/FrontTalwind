@@ -92,16 +92,16 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-[#23293B] rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#2D3446] shadow-2xl">
         <div className="p-6">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-white">
               Editar Mi Perfil
             </h2>
             <button
               onClick={onClose}
-              className="text-gray-500 hover:text-gray-700 text-2xl"
+              className="text-gray-400 hover:text-white text-2xl"
               disabled={loading}
             >
               ×
@@ -109,23 +109,31 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
           </div>
 
           {/* Información del usuario */}
-          <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-            {instructor.foto && (
+          {console.log('Valor de instructor.foto:', instructor.foto)}
+          <div className="mb-6 p-4 bg-[#23293B] rounded-lg border border-[#2D3446]">
+            {instructor.foto ? (
               <div className="flex justify-center mb-4">
                 <img
                   src={getImageUrl(instructor.foto)}
                   alt="Foto de perfil"
-                  className="w-24 h-24 rounded-full object-cover border-4 border-green-200 shadow"
+                  className="w-24 h-24 rounded-full object-cover border-4 border-[#22D47C] shadow"
+                  onError={e => { e.target.onerror = null; e.target.style.display = 'none'; }}
                 />
               </div>
+            ) : (
+              <div className="flex justify-center mb-4">
+                <div className="w-24 h-24 rounded-full border-4 border-[#22D47C] flex items-center justify-center text-[#22D47C] bg-[#23293B]">
+                  Sin foto
+                </div>
+              </div>
             )}
-            <p className="text-gray-800">
+            <p className="text-white">
               <strong>Nombre:</strong> {instructor.nombre} {instructor.apellido}
             </p>
-            <p className="text-gray-600">
+            <p className="text-[#B0B8C1]">
               <strong>Rol:</strong> {instructor.rol === 'instructor' ? 'Instructor' : 'Funcionario'}
             </p>
-            <p className="text-gray-600">
+            <p className="text-[#B0B8C1]">
               <strong>Email:</strong> {instructor.correo}
             </p>
           </div>
@@ -146,7 +154,7 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
           <form onSubmit={handleSubmit}>
             {/* Especialidad */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[#B0B8C1] mb-2">
                 Especialidad *
               </label>
               <input
@@ -155,7 +163,7 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
                 value={formData.especialidad}
                 onChange={handleInputChange}
                 placeholder="Ej: Desarrollo Web Frontend, Gestión de Proyectos, etc."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 bg-[#23293B] border border-[#2D3446] rounded-md focus:outline-none focus:ring-2 focus:ring-[#22D47C] text-white placeholder-[#B0B8C1]"
                 disabled={loading}
                 required
               />
@@ -163,7 +171,7 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
 
             {/* Experiencia */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[#B0B8C1] mb-2">
                 Experiencia *
               </label>
               <textarea
@@ -172,7 +180,7 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
                 onChange={handleInputChange}
                 placeholder="Describe tu experiencia profesional y educativa..."
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 bg-[#23293B] border border-[#2D3446] rounded-md focus:outline-none focus:ring-2 focus:ring-[#22D47C] text-white placeholder-[#B0B8C1]"
                 disabled={loading}
                 required
               />
@@ -180,7 +188,7 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
 
             {/* Cursos */}
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[#B0B8C1] mb-2">
                 Cursos que enseñas
               </label>
               <input
@@ -188,20 +196,19 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
                 value={cursosInput}
                 onChange={handleCursosChange}
                 placeholder="Separa los cursos con comas: React JS, Python, Node.js, etc."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 bg-[#23293B] border border-[#2D3446] rounded-md focus:outline-none focus:ring-2 focus:ring-[#22D47C] text-white placeholder-[#B0B8C1]"
                 disabled={loading}
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-sm text-[#B0B8C1] mt-1">
                 Separa múltiples cursos con comas
               </p>
-              
               {/* Mostrar cursos como tags */}
               {formData.cursos.length > 0 && (
                 <div className="mt-2 flex flex-wrap gap-2">
                   {formData.cursos.map((curso, index) => (
                     <span
                       key={index}
-                      className="px-2 py-1 bg-green-100 text-green-800 text-sm rounded-full"
+                      className="px-2 py-1 bg-[#22D47C]/20 text-[#22D47C] text-sm rounded-full border border-[#22D47C]"
                     >
                       {curso}
                     </span>
@@ -212,7 +219,7 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
 
             {/* Biografía */}
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-[#B0B8C1] mb-2">
                 Biografía
               </label>
               <textarea
@@ -221,7 +228,7 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
                 onChange={handleInputChange}
                 placeholder="Cuéntanos un poco sobre ti, tus pasiones, metodología de enseñanza, etc."
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 bg-[#23293B] border border-[#2D3446] rounded-md focus:outline-none focus:ring-2 focus:ring-[#22D47C] text-white placeholder-[#B0B8C1]"
                 disabled={loading}
               />
             </div>
@@ -231,7 +238,7 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 border border-[#2D3446] text-[#B0B8C1] rounded-md hover:bg-[#23293B]/70 disabled:bg-[#23293B]/40 disabled:cursor-not-allowed"
                 disabled={loading}
               >
                 Cancelar
@@ -239,7 +246,7 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
               <button
                 type="submit"
                 disabled={loading || !formData.especialidad.trim() || !formData.experiencia.trim()}
-                className="flex-1 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                className="flex-1 px-4 py-2 bg-[#22D47C] text-[#23293B] font-bold rounded-md hover:bg-[#1bb86a] disabled:bg-[#2D3446] disabled:text-[#B0B8C1] disabled:cursor-not-allowed transition-colors"
               >
                 {loading ? 'Guardando...' : 'Guardar Cambios'}
               </button>
