@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { Header } from "../../Layouts/Header/Header";
 import PermissionWrapper from "../../components/PermissionWrapper/PermissionWrapper";
 import { PERMISOS } from "../../constants/roles";
-import { getEventos, getImageUrl } from "../../services/publicaciones";
+import { getEventos } from "../../services/publicaciones";
+import { getImageUrl } from "../../services/config";
 
 // Fallback para imágenes por defecto
 import slider1 from "../../assets/images/optimized/optimized_slider1.jpg";
