@@ -58,7 +58,7 @@ const EventosNoticias = () => {
         tipo: 'noticia',
         titulo: noticia.Nombre,
         descripcion: noticia.Descripción,
-        imagen: noticia.ImagenSlider ? `http://localhost:5000${noticia.ImagenSlider}` : slider2,
+        imagen: noticia.ImagenSlider ? getImageUrl(noticia.ImagenSlider) : slider2,
         fecha: noticia.Fecha,
         ubicacion: noticia.Ubicacion,
         creador: `${noticia.CreadorNombre || ''} ${noticia.CreadorApellido || ''}`.trim(),
@@ -407,20 +407,18 @@ const EventosNoticias = () => {
                       </div>
 
                       {/* Imagen */}
-                      {publicacion.imagen && (
-                        <div className="relative">
-                          <img
-                            src={publicacion.imagen}
-                            alt={publicacion.titulo}
-                            className="w-full h-64 md:h-80 object-cover"
-                            onError={(e) => {
-                              e.target.onerror = null;
-                              e.target.src = slider1;
-                            }}
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                        </div>
-                      )}
+                      <div className="relative">
+                        <img
+                          src={publicacion.imagen}
+                          alt={publicacion.titulo}
+                          className="w-full h-64 md:h-80 object-cover"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = slider1;
+                          }}
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                      </div>
 
                       {/* Footer con información adicional */}
                       <div className="p-6 pt-4">
