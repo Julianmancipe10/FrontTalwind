@@ -6,6 +6,7 @@ import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { usePermissions } from '../../hooks/usePermissions';
 import { PERMISOS } from '../../constants/roles';
 import { getCurrentUser, getPendingValidations } from '../../services/auth';
+import { getImageUrl } from '../../services/config';
 
 export const Header = () => {
   const { hasPermission } = usePermissions();
@@ -245,7 +246,7 @@ export const Header = () => {
                   >
                     <div className="relative flex-shrink-0">
                       <img 
-                        src={user.foto ? `http://localhost:5000${user.foto}` : imgUsuario} 
+                        src={user.foto ? getImageUrl(user.foto) : imgUsuario} 
                         alt="Perfil" 
                         className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover ring-2 ring-[#39B54A]"
                         onError={(e) => {
