@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { updateMiPerfil } from '../services/instructorService';
+import { getImageUrl } from '../services/config';
 
 const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
   const [formData, setFormData] = useState({
@@ -109,6 +110,15 @@ const EditarPerfilModal = ({ instructor, onClose, onPerfilActualizado }) => {
 
           {/* Información del usuario */}
           <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+            {instructor.foto && (
+              <div className="flex justify-center mb-4">
+                <img
+                  src={getImageUrl(instructor.foto)}
+                  alt="Foto de perfil"
+                  className="w-24 h-24 rounded-full object-cover border-4 border-green-200 shadow"
+                />
+              </div>
+            )}
             <p className="text-gray-800">
               <strong>Nombre:</strong> {instructor.nombre} {instructor.apellido}
             </p>

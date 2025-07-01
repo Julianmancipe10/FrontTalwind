@@ -4,6 +4,7 @@ import { Header } from "../../Layouts/Header/Header";
 import PermissionWrapper from "../PermissionWrapper/PermissionWrapper";
 import { PERMISOS } from "../../constants/roles";
 import { getCarreras } from "../../services/publicaciones";
+import { getImageUrl } from '../../services/config';
 
 // Imagen por defecto para carreras
 import defaultCarrera from "../../assets/images/optimized/optimized_slider1.jpg";
@@ -44,7 +45,8 @@ const CarrerasTecnologicas = () => {
               fecha: carrera.Fecha,
               tipo: carrera.TipoPublicacion === '3' ? 'Técnico' : 'Tecnólogo',
               creador: `${carrera.CreadorNombre || ''} ${carrera.CreadorApellido || ''}`.trim(),
-              fechaCreacion: carrera.FechaCreacion
+              fechaCreacion: carrera.FechaCreacion,
+              imagen: carrera.Imagen
             };
           });
           
@@ -163,6 +165,16 @@ const CarrerasTecnologicas = () => {
 
                 {/* Contenido de la tarjeta */}
                 <div className="p-6">
+                  {/* Imagen de la carrera (si existiera campo de imagen) */}
+                  {carrera.imagen && (
+                    <div className="flex justify-center mb-4">
+                      <img
+                        src={getImageUrl(carrera.imagen)}
+                        alt={carrera.titulo}
+                        className="w-32 h-32 object-cover rounded-lg border-2 border-green-200 shadow"
+                      />
+                    </div>
+                  )}
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center text-gray-300">
                       <svg className="w-5 h-5 mr-2 text-[#39B54A]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

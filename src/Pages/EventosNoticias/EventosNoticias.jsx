@@ -4,6 +4,7 @@ import { Header } from "../../Layouts/Header/Header";
 import PermissionWrapper from "../../components/PermissionWrapper/PermissionWrapper";
 import { PERMISOS } from "../../constants/roles";
 import { getEventos, getNoticias } from "../../services/publicaciones";
+import { getImageUrl } from '../../services/config';
 
 // Fallback para imágenes por defecto
 import slider1 from "../../assets/images/optimized/optimized_slider1.jpg";
@@ -45,7 +46,7 @@ const EventosNoticias = () => {
         tipo: 'evento',
         titulo: evento.Nombre,
         descripcion: evento.Descripción,
-        imagen: evento.ImagenSlider ? `http://localhost:5000${evento.ImagenSlider}` : slider1,
+        imagen: evento.ImagenSlider ? getImageUrl(evento.ImagenSlider) : slider1,
         fecha: evento.Fecha,
         ubicacion: evento.Ubicacion,
         creador: `${evento.CreadorNombre || ''} ${evento.CreadorApellido || ''}`.trim(),

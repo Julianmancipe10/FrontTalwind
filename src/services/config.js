@@ -62,6 +62,21 @@ export const getCurrentUser = () => {
   }
 };
 
+// Devuelve la URL base del backend según el entorno
+export const getBackendBaseUrl = () => {
+  if (import.meta.env.DEV || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return '';
+  }
+  return 'https://senaunitybackend-production.up.railway.app';
+};
+
+// Construye la URL completa de la imagen
+export const getImageUrl = (relativePath) => {
+  if (!relativePath) return '';
+  if (relativePath.startsWith('http')) return relativePath;
+  return `${getBackendBaseUrl()}${relativePath}`;
+};
+
 console.log('🔧 API Config:', {
   baseUrl: API_CONFIG.BASE_URL,
   isDev: import.meta.env.DEV,

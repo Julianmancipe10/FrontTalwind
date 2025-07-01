@@ -4,7 +4,7 @@ import { Header } from '../../../Layouts/Header/Header';
 import { getPublicacionById, updatePublicacion } from '../../../services/publicaciones';
 import PermissionWrapper from "../../../components/PermissionWrapper/PermissionWrapper";
 import { PERMISOS } from "../../../constants/roles";
-import { API_CONFIG } from '../../../services/config';
+import { API_CONFIG, getImageUrl } from '../../../services/config';
 import slider1 from '../../../assets/images/optimized/optimized_slider1.jpg';
 
 const VerMasNoticia = () => {
@@ -24,12 +24,8 @@ const VerMasNoticia = () => {
         const data = await getPublicacionById(id);
         
         if (data) {
-          // Construir URL de imagen usando la configuración base
-          const imageUrl = data.ImagenSlider 
-            ? (API_CONFIG.BASE_URL.startsWith('/') 
-                ? `${window.location.origin}${data.ImagenSlider}` 
-                : `${API_CONFIG.BASE_URL.replace('/api', '')}${data.ImagenSlider}`)
-            : slider1;
+          // Construir URL de imagen usando el helper universal
+          const imageUrl = data.ImagenSlider ? getImageUrl(data.ImagenSlider) : slider1;
             
           setNoticia({
             id: data.ID_Evento,

@@ -4,6 +4,7 @@ import { getCurrentUser } from '../../services/auth';
 import { updateUserProfile, updateUserProfileJSON } from '../../services/profile';
 import defaultProfileImage from '../../assets/images/default-profile.svg';
 import { Header } from '../../Layouts/Header/Header';
+import { getImageUrl } from '../../services/config';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const Profile = () => {
             
             // Cargar imagen de perfil
             if (profileData.foto) {
-              setImagePreview(`http://localhost:5000${profileData.foto}`);
+              setImagePreview(getImageUrl(profileData.foto));
             } else {
               setImagePreview(defaultProfileImage);
             }
@@ -170,7 +171,7 @@ const Profile = () => {
 
       // Actualizar la imagen del perfil si se recibió una nueva
       if (updatedUser.user.foto) {
-        setImagePreview(`http://localhost:5000${updatedUser.user.foto}`);
+        setImagePreview(getImageUrl(updatedUser.user.foto));
       }
 
       // Limpiar la imagen seleccionada después de actualizar exitosamente
