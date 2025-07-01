@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Header } from "../../Layouts/Header/Header";
 import PermissionWrapper from "../../components/PermissionWrapper/PermissionWrapper";
 import { PERMISOS } from "../../constants/roles";
-import { getEventos } from "../../services/publicaciones";
+import { getEventos, getImageUrl } from "../../services/publicaciones";
 
 // Fallback para imágenes por defecto
 import slider1 from "../../assets/images/optimized/optimized_slider1.jpg";
@@ -52,7 +52,7 @@ const Eventos = () => {
           // Convertir datos del backend al formato esperado
           const eventosFormateados = eventosData.map(evento => ({
             id: evento.ID_Evento,
-            image: evento.ImagenSlider ? `http://localhost:5000${evento.ImagenSlider}` : slider1,
+            image: evento.ImagenSlider ? getImageUrl(evento.ImagenSlider) : slider1,
             badge: "Evento",
             title: evento.Nombre,
             description: evento.Descripción?.substring(0, 100) + (evento.Descripción?.length > 100 ? '...' : ''),
