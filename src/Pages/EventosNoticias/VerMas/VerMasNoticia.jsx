@@ -81,6 +81,7 @@ const VerMasNoticia = () => {
       formData.append('Ubicacion', editForm.ubicacion);
       
       if (newImage) {
+        formData.append('imagenes', newImage);
         formData.append('imagen', newImage);
       }
       // Log para depuración: mostrar todas las entradas del FormData
