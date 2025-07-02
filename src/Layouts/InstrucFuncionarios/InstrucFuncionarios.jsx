@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { getInstructoresYFuncionarios } from '../../services/instructorService';
 import { getCurrentUser } from '../../services/auth';
+import { getImageUrl } from '../../services/config';
 import InstructorModal from '../../components/InstructorModal';
 import CalificacionModal from '../../components/CalificacionModal';
 import EditarPerfilModal from '../../components/EditarPerfilModal';
@@ -113,8 +114,8 @@ const InstrucFuncionarios = () => {
       if (instructor.foto.startsWith('http')) {
         return instructor.foto;
       }
-      // Si es una ruta local, anteponer el dominio
-      return `http://localhost:5000${instructor.foto}`;
+      // Si es una ruta local, usar getImageUrl para manejar entornos
+      return getImageUrl(instructor.foto);
     }
     // Imagen por defecto basada en el género sugerido por el nombre
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(instructor.nombre + ' ' + instructor.apellido)}&background=4ade80&color=ffffff&size=400`;

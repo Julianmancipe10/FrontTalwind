@@ -5,6 +5,7 @@ import { Header } from "../../Layouts/Header/Header";
 import PermissionWrapper from "../../components/PermissionWrapper/PermissionWrapper";
 import { PERMISOS } from "../../constants/roles";
 import { getNoticias } from "../../services/publicaciones";
+import { getImageUrl } from "../../services/config";
 
 // Fallback para imágenes por defecto
 import slider1 from "../../assets/images/optimized/optimized_slider1.jpg";
@@ -52,7 +53,7 @@ const Noticias = () => {
           // Convertir datos del backend al formato esperado
           const noticiasFormateadas = noticiasData.map(noticia => ({
             id: noticia.ID_Evento,
-            image: noticia.ImagenSlider ? `http://localhost:5000${noticia.ImagenSlider}` : slider1,
+            image: noticia.ImagenSlider ? getImageUrl(noticia.ImagenSlider) : slider1,
             badge: "Noticia",
             title: noticia.Nombre,
             description: noticia.Descripción?.substring(0, 100) + (noticia.Descripción?.length > 100 ? '...' : ''),
