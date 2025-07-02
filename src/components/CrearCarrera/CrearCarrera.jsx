@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { usePermissions } from '../../hooks/usePermissions';
 import { PERMISOS } from '../../constants/roles';
 import AccessDenied from '../AccessDenied/AccessDenied';
+import { buildApiUrl } from '../../services/config';
 
 const CrearCarrera = () => {
   // TODOS los hooks deben ir PRIMERO
@@ -52,7 +53,7 @@ const CrearCarrera = () => {
     try {
       console.log('Enviando carrera al backend...');
       
-      const response = await fetch('http://localhost:5000/api/publicaciones/carreras', {
+      const response = await fetch(buildApiUrl('/publicaciones/carreras'), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
