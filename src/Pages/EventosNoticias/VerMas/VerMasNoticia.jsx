@@ -81,7 +81,7 @@ const VerMasNoticia = () => {
       formData.append('Ubicacion', editForm.ubicacion);
       // Solo enviar la imagen si el usuario seleccionó una nueva
       if (newImage) {
-        formData.append('imagenes', newImage); // Solo si hay nueva imagen
+        formData.append('imagen', newImage); // Igual que en eventos
       }
       // Log para depuración: mostrar todas las entradas del FormData
       for (let pair of formData.entries()) {
