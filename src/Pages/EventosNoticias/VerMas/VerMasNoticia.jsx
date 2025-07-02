@@ -71,15 +71,21 @@ const VerMasNoticia = () => {
 
   const handleSaveEdit = async () => {
     try {
+      // Log para depuración: mostrar el objeto editForm
+      console.log('Valores a enviar:', editForm);
       // Preparar datos para actualización
       const formData = new FormData();
       formData.append('Nombre', editForm.titulo);
-      formData.append('Descripción', editForm.descripcion);
+      formData.append('Descripcion', editForm.descripcion);
       formData.append('URL_Enlace', editForm.enlace);
       formData.append('Ubicacion', editForm.ubicacion);
       
       if (newImage) {
         formData.append('imagen', newImage);
+      }
+      // Log para depuración: mostrar todas las entradas del FormData
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
       }
 
       // Usar el servicio centralizado

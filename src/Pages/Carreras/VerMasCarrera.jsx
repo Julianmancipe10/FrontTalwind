@@ -86,15 +86,19 @@ const VerMasCarrera = () => {
 
   const handleSaveEdit = async () => {
     try {
+      // Log para depuración: mostrar el objeto editForm
+      console.log('Valores a enviar:', editForm);
       // Crear descripción completa actualizada
       const descripcionCompleta = `${editForm.descripcion}\n\nDuración: ${editForm.horas} horas\nTítulo a obtener: ${editForm.tituloObtener}`;
       
       const updateData = {
         Nombre: editForm.titulo,
-        Descripción: descripcionCompleta,
+        Descripcion: descripcionCompleta,
         Ubicacion: editForm.ubicacion,
         URL_Enlace: editForm.enlace
       };
+      // Log para depuración: mostrar el objeto updateData
+      console.log('Objeto updateData a enviar:', updateData);
 
       await updatePublicacion(id, updateData);
 
