@@ -187,17 +187,31 @@ export const createCarrera = async (carreraData) => {
 };
 
 // Actualizar publicación
-export const updatePublicacion = async (id, formData) => {
+export const updatePublicacion = async (id, updateData) => {
   try {
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('No estás autenticado. Por favor, inicia sesión.');
     }
 
+    // Determinar si es FormData o JSON
+    const isFormData = updateData instanceof FormData;
+    
+    const headers = {
+      ...getAuthHeaders()
+    };
+
+    // Si no es FormData, agregar Content-Type para JSON
+    if (!isFormData) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    const body = isFormData ? updateData : JSON.stringify(updateData);
+
     const response = await fetch(buildApiUrl(`/publicaciones/${id}`), {
       method: 'PUT',
-      headers: getAuthHeaders(),
-      body: formData
+      headers,
+      body
     });
 
     await handleErrorResponse(response);

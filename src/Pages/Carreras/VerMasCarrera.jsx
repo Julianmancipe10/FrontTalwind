@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Header } from '../../Layouts/Header/Header';
-import { getPublicacionById } from '../../services/publicaciones';
+import { getPublicacionById, updatePublicacion } from '../../services/publicaciones';
 import PermissionWrapper from "../../components/PermissionWrapper/PermissionWrapper";
 import { PERMISOS } from "../../constants/roles";
+import { buildApiUrl, getImageUrl } from '../../services/config';
 import defaultCarrera from '../../assets/images/optimized/optimized_slider1.jpg';
 
 const VerMasCarrera = () => {
@@ -44,7 +45,7 @@ const VerMasCarrera = () => {
             tipo: data.TipoPublicacion === '3' ? 'Técnico' : 'Tecnólogo',
             creador: `${data.CreadorNombre || ''} ${data.CreadorApellido || ''}`.trim(),
             fechaCreacion: data.FechaCreacion,
-            imagen: data.ImagenSlider ? `http://localhost:5000${data.ImagenSlider}` : defaultCarrera
+            imagen: data.ImagenSlider ? getImageUrl(data.ImagenSlider) : defaultCarrera
           };
           
           setCarrera(carreraData);
@@ -92,34 +93,23 @@ const VerMasCarrera = () => {
         URL_Enlace: editForm.enlace
       };
 
-      const response = await fetch(`http://localhost:5000/api/publicaciones/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify(updateData)
-      });
+      await updatePublicacion(id, updateData);
 
-      if (response.ok) {
-        // Actualizar estado local
-        setCarrera(prev => ({
-          ...prev,
-          titulo: editForm.titulo,
-          descripcion: editForm.descripcion,
-          horas: editForm.horas,
-          tituloObtener: editForm.tituloObtener,
-          ubicacion: editForm.ubicacion,
-          enlace: editForm.enlace
-        }));
-        setIsEditing(false);
-        alert('Carrera actualizada exitosamente');
-      } else {
-        throw new Error('Error al actualizar la carrera');
-      }
+      // Actualizar estado local
+      setCarrera(prev => ({
+        ...prev,
+        titulo: editForm.titulo,
+        descripcion: editForm.descripcion,
+        horas: editForm.horas,
+        tituloObtener: editForm.tituloObtener,
+        ubicacion: editForm.ubicacion,
+        enlace: editForm.enlace
+      }));
+      setIsEditing(false);
+      alert('Carrera actualizada exitosamente');
     } catch (error) {
       console.error('Error al actualizar carrera:', error);
-      alert('Error al actualizar la carrera');
+      alert(`Error al actualizar la carrera: ${error.message}`);
     }
   };
 
