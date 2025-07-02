@@ -79,29 +79,38 @@ const VerMasNoticia = () => {
       formData.append('Descripcion', editForm.descripcion);
       formData.append('URL_Enlace', editForm.enlace);
       formData.append('Ubicacion', editForm.ubicacion);
-      
+      // Solo enviar la imagen si el usuario seleccionó una nueva
       if (newImage) {
-        formData.append('imagenes', newImage);
-        formData.append('imagen', newImage);
+        formData.append('imagenes', newImage); // Solo si hay nueva imagen
       }
       // Log para depuración: mostrar todas las entradas del FormData
       for (let pair of formData.entries()) {
         console.log(pair[0] + ', ' + pair[1]);
       }
-
       // Usar el servicio centralizado
       await updatePublicacion(id, formData);
-
-      // Actualizar estado local
-      setNoticia({
-        ...noticia,
-        titulo: editForm.titulo,
-        descripcion: editForm.descripcion,
-        enlace: editForm.enlace,
-        ubicacion: editForm.ubicacion,
-        imagen: newImagePreview || noticia.imagen
-      });
-      
+      // Volver a pedir los datos actualizados del backend
+      const data = await getPublicacionById(id);
+      if (data) {
+        const imageUrl = data.ImagenSlider ? getImageUrl(data.ImagenSlider) : slider1;
+        setNoticia({
+          id: data.ID_Evento,
+          titulo: data.Nombre,
+          fecha: data.Fecha,
+          enlace: data.URL_Enlace,
+          imagen: imageUrl,
+          descripcion: data.Descripción,
+          ubicacion: data.Ubicacion,
+          creador: `${data.CreadorNombre || ''} ${data.CreadorApellido || ''}`.trim(),
+          fechaCreacion: data.FechaCreacion
+        });
+        setEditForm({
+          titulo: data.Nombre,
+          descripcion: data.Descripción,
+          enlace: data.URL_Enlace || '',
+          ubicacion: data.Ubicacion
+        });
+      }
       setIsEditing(false);
       setNewImage(null);
       if (newImagePreview) {
