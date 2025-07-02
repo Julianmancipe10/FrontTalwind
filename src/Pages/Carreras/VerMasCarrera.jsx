@@ -71,6 +71,9 @@ const VerMasCarrera = () => {
     if (id) {
       fetchCarrera();
     }
+
+    // Exponer fetchCarrera para usarlo después de editar
+    VerMasCarrera.fetchCarrera = fetchCarrera;
   }, [id]);
 
   const handleEditChange = (e) => {
@@ -95,16 +98,8 @@ const VerMasCarrera = () => {
 
       await updatePublicacion(id, updateData);
 
-      // Actualizar estado local
-      setCarrera(prev => ({
-        ...prev,
-        titulo: editForm.titulo,
-        descripcion: editForm.descripcion,
-        horas: editForm.horas,
-        tituloObtener: editForm.tituloObtener,
-        ubicacion: editForm.ubicacion,
-        enlace: editForm.enlace
-      }));
+      // Volver a pedir los datos actualizados del backend
+      await VerMasCarrera.fetchCarrera();
       setIsEditing(false);
       alert('Carrera actualizada exitosamente');
     } catch (error) {

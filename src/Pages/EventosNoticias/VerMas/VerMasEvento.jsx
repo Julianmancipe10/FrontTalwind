@@ -59,6 +59,8 @@ const VerMasEvento = () => {
     if (id) {
       fetchEvento();
     }
+    // Exponer fetchEvento para usarlo después de editar
+    VerMasEvento.fetchEvento = fetchEvento;
   }, [id]);
 
   const handleImageChange = (e) => {
@@ -85,15 +87,8 @@ const VerMasEvento = () => {
       // Usar el servicio centralizado
       await updatePublicacion(id, formData);
 
-      // Actualizar estado local
-      setEvento({
-        ...evento,
-        titulo: editForm.titulo,
-        descripcion: editForm.descripcion,
-        enlace: editForm.enlace,
-        ubicacion: editForm.ubicacion,
-        imagen: newImagePreview || evento.imagen
-      });
+      // Volver a pedir los datos actualizados del backend
+      await VerMasEvento.fetchEvento();
       
       setIsEditing(false);
       setNewImage(null);
