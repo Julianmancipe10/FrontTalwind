@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { crearCalificacion, verificarEstudiante } from '../services/calificacionService';
 
 const CalificacionModal = ({ instructores, currentUser, onClose }) => {
@@ -10,6 +10,7 @@ const CalificacionModal = ({ instructores, currentUser, onClose }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const timeoutRef = useRef(null);
 
   const isLoggedStudent = currentUser && currentUser.rol === 'aprendiz';
 
@@ -73,7 +74,7 @@ const CalificacionModal = ({ instructores, currentUser, onClose }) => {
       setSuccess('¡Calificación enviada exitosamente! Gracias por tu opinión.');
       
       // Limpiar formulario después de 2 segundos
-      setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         onClose();
       }, 2000);
     } catch (error) {
@@ -82,6 +83,14 @@ const CalificacionModal = ({ instructores, currentUser, onClose }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   // Renderizar estrellas para selección
   const renderStarSelector = () => {
